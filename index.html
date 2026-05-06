@@ -12,103 +12,116 @@
     <style>
         :root {
             --bg-deep: #020c0b;
-            --bg-main: #051F20;         
-            --glass: rgba(11, 43, 38, 0.95);
-            --accent: #235E51;     
+            --bg-glass: rgba(11, 43, 38, 0.95);
             --gold: #C5A059;
-            --blue-light: #3498db;
+            --gold-light: #E0C08D;
             --texto: #f8fafc;
-            --danger: #e74c3c;
+            --input-bg: rgba(0,0,0,0.3);
+            --card-border: rgba(197, 160, 89, 0.3);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        [data-theme="light"] {
+            --bg-deep: #f1f5f9;
+            --bg-glass: rgba(255, 255, 255, 0.95);
+            --gold: #A67C00;
+            --gold-light: #C5A059;
+            --texto: #0f172a;
+            --input-bg: #ffffff;
+            --card-border: rgba(166, 124, 0, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: background 0.3s, color 0.3s; }
+        
         body { 
-            background: radial-gradient(circle at top right, var(--accent), var(--bg-deep));
+            background: var(--bg-deep);
             color: var(--texto); min-height: 100vh;
         }
 
         header { 
-            background: var(--glass); padding: 1.2rem 2rem; border-bottom: 2px solid var(--gold);
-            display: flex; justify-content: space-between; align-items: center;
+            background: var(--bg-glass); padding: 1.2rem 2rem; border-bottom: 2px solid var(--gold);
+            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
         }
 
         .container { padding: 20px; max-width: 1100px; margin: auto; }
         .grid-nav { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         
         .card-nav { 
-            background: var(--glass); padding: 30px; border-radius: 20px; border: 1px solid rgba(197, 160, 89, 0.3);
-            cursor: pointer; text-align: center; transition: 0.3s;
+            background: var(--bg-glass); padding: 30px; border-radius: 20px; border: 1px solid var(--card-border);
+            cursor: pointer; text-align: center;
         }
         .card-nav:hover { transform: translateY(-5px); border-color: var(--gold); }
 
-        /* ESTILO CV */
-        .cv-card { background: var(--glass); border-radius: 30px; border: 1px solid var(--gold); overflow: hidden; max-width: 800px; margin: auto; }
-        .cv-header { display: grid; grid-template-columns: 250px 1fr; background: rgba(0,0,0,0.3); border-bottom: 2px solid var(--gold); }
-        .cv-photo-side { padding: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .cv-photo { width: 180px; height: 180px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; }
-        .cv-info-side { padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+        /* CV Y FOTO */
+        .cv-card { background: var(--bg-glass); border-radius: 30px; border: 1px solid var(--gold); overflow: hidden; max-width: 800px; margin: auto; }
+        .cv-header { display: grid; grid-template-columns: 250px 1fr; background: rgba(0,0,0,0.1); border-bottom: 2px solid var(--gold); }
+        .cv-photo-side { padding: 30px; display: flex; flex-direction: column; align-items: center; }
+        .cv-photo { width: 180px; height: 180px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; cursor: zoom-in; }
         .cv-details { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 30px; }
-        .cv-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; border-left: 3px solid var(--gold); }
-        .cv-label { font-size: 0.7rem; color: var(--gold); font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
+        .cv-item { background: rgba(197, 160, 89, 0.05); padding: 15px; border-radius: 15px; border-left: 3px solid var(--gold); }
+        .cv-label { font-size: 0.7rem; color: var(--gold); font-weight: 800; text-transform: uppercase; }
 
-        /* EDITOR FOTO */
-        .header-registro { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
-        .foto-perfil-container { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .circulo-foto { width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--blue-light); object-fit: cover; background: rgba(0,0,0,0.2); }
-        
-        /* FORMULARIO */
+        /* EDITOR */
+        .circulo-foto { width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; background: rgba(0,0,0,0.1); cursor: zoom-in; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .full-width { grid-column: span 2; }
-        input, select, textarea { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 8px; width: 100%; }
+        input, select, textarea { background: var(--input-bg); border: 1px solid var(--card-border); color: var(--texto); padding: 12px; border-radius: 8px; width: 100%; }
 
-        .btn-guardar { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; }
-        .btn-edit { background: var(--blue-light); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .btn-danger { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+        /* BOTONES */
+        .btn-gold { background: var(--gold); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: 800; cursor: pointer; }
+        .btn-outline-gold { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .btn-theme { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 10px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; }
 
-        #vistaLogin { height: 100vh; display: flex; align-items: center; justify-content: center; }
+        /* ZOOM MODAL */
+        #zoomModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
+        #zoomImg { max-width: 90%; max-height: 90%; border: 3px solid var(--gold); border-radius: 10px; }
+
         .vistas, #mainHeader { display: none; }
     </style>
 </head>
-<body>
+<body data-theme="dark">
+
+    <div id="zoomModal" onclick="this.style.display='none'"><img id="zoomImg" src=""></div>
 
     <!-- LOGIN -->
-    <div id="vistaLogin">
-        <div style="background: var(--glass); padding: 40px; border-radius: 20px; border: 1px solid var(--gold); text-align: center;">
+    <div id="vistaLogin" style="height: 100vh; display: flex; align-items: center; justify-content: center;">
+        <div style="background: var(--bg-glass); padding: 40px; border-radius: 20px; border: 1px solid var(--gold); text-align: center;">
             <h2 style="color: var(--gold); margin-bottom: 20px;">ACCESO PRIVADO</h2>
             <input type="text" id="loginEmail" placeholder="Usuario">
-            <input type="password" id="loginPass" placeholder="Contraseña">
-            <button class="btn-guardar" style="margin-top:20px" onclick="login()">INGRESAR</button>
+            <input type="password" id="loginPass" placeholder="Contraseña" style="margin-top:10px;">
+            <button class="btn-gold" style="width:100%; margin-top:20px;" onclick="login()">INGRESAR</button>
         </div>
     </div>
 
     <header id="mainHeader">
         <div onclick="irTableros()" style="cursor:pointer; font-weight:800; color: var(--gold);">PANEL DE CONTROL</div>
-        <button onclick="logout()" style="color: #ff6b6b; background:none; border:none; cursor:pointer;">Salir</button>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="btn-theme" onclick="toggleTheme()">🌓 Modo</button>
+            <button onclick="logout()" style="color: #ff6b6b; background:none; border:none; cursor:pointer; font-size: 0.8rem;">Salir</button>
+        </div>
     </header>
 
     <!-- NAVEGACIÓN -->
     <div class="container vistas" id="vistaNavegacion">
         <div id="tituloVista" style="margin-bottom:20px;"></div>
         <div id="gridNav" class="grid-nav"></div>
-        <button class="btn-guardar" style="width:auto; padding:15px 30px; position:fixed; bottom:20px; right:20px;" onclick="abrirEditor()">+ Nuevo Registro</button>
+        <button class="btn-gold" style="position:fixed; bottom:20px; right:20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" onclick="abrirEditor()">+ Nuevo Registro</button>
     </div>
 
-    <!-- VISTA CV -->
+    <!-- CV -->
     <div class="container vistas" id="vistaCV">
-        <button onclick="volverNavegacion()" style="background:none; border:none; color:var(--gold); cursor:pointer; margin-bottom:20px; font-weight:800;">← VOLVER</button>
+        <button onclick="volverNavegacion()" class="btn-outline-gold" style="margin-bottom:20px;">← VOLVER</button>
         <div id="cvDetalle"></div>
     </div>
 
     <!-- EDITOR -->
     <div class="container vistas" id="vistaEditor">
-        <div style="background: var(--glass); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); max-width: 700px; margin: auto;">
-            
-            <div class="header-registro">
-                <h2 id="txtTituloEditor">Nuevo Registro</h2>
-                <div class="foto-perfil-container">
-                    <img id="previsualizacion" src="" class="circulo-foto" style="display: none;">
-                    <div id="circuloVacio" class="circulo-foto"></div>
-                    <button class="btn-edit" style="font-size: 0.7rem; padding: 5px 10px;" onclick="document.getElementById('inFotoFile').click()">Cambiar Foto</button>
+        <div style="background: var(--bg-glass); padding: 30px; border-radius: 25px; border: 1px solid var(--gold); max-width: 700px; margin: auto;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                <h2 id="txtTituloEditor">Registro</h2>
+                <div style="text-align: center;">
+                    <img id="previsualizacion" src="" class="circulo-foto" onclick="zoomFoto(this.src)" style="display: none;">
+                    <div id="circuloVacio" class="circulo-foto" onclick="document.getElementById('inFotoFile').click()"></div>
+                    <button class="btn-outline-gold" style="font-size: 0.7rem; margin-top: 5px; display: block;" onclick="document.getElementById('inFotoFile').click()">Cambiar Foto</button>
                     <input type="file" id="inFotoFile" accept="image/*" style="display: none;" onchange="handleImage(this)">
                 </div>
             </div>
@@ -125,7 +138,6 @@
                 <input type="text" id="inFilial" placeholder="Filial / Barrio">
                 <input type="text" id="inDoc" placeholder="Cédula de Identidad">
                 <input type="text" id="inTel" placeholder="Teléfono">
-                
                 <select id="inRango" class="full-width">
                     <option value="" disabled selected>Seleccione Cargo</option>
                     <option value="1ro">1ro</option>
@@ -134,14 +146,13 @@
                     <option value="4to">4to</option>
                     <option value="5to">5to</option>
                 </select>
-
                 <textarea id="inHist" placeholder="Observaciones..." class="full-width" style="height: 60px;"></textarea>
             </div>
 
-            <button class="btn-guardar" style="margin-top: 20px;" onclick="guardar()">GUARDAR REGISTRO</button>
+            <button class="btn-gold" style="width: 100%; margin-top: 20px;" onclick="guardar()">GUARDAR CAMBIOS</button>
             <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                <button id="btnEliminar" class="btn-danger" onclick="eliminarRegistro()">ELIMINAR</button>
-                <button onclick="volverNavegacion()" style="background:none; border:none; color:white; cursor:pointer;">Cancelar</button>
+                <button id="btnEliminar" style="color:#ff6b6b; background:none; border:none; cursor:pointer;" onclick="eliminarRegistro()">Eliminar Persona</button>
+                <button onclick="volverNavegacion()" style="background:none; border:none; color:var(--texto); cursor:pointer;">Cancelar</button>
             </div>
         </div>
     </div>
@@ -158,20 +169,21 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        let miembros = [];
-        let estadoNav = { tabla: null, ciudad: null, filial: null };
-        let idEdit = null;
-        let base64Foto = "";
+        let miembros = [], estadoNav = { tabla: null, ciudad: null, filial: null }, idEdit = null, base64Foto = "";
 
         function login() {
-            if (document.getElementById('loginEmail').value === "Guardias@admi" && 
-                document.getElementById('loginPass').value === "2398") {
+            if (document.getElementById('loginEmail').value === "Guardias@admi" && document.getElementById('loginPass').value === "2398") {
                 localStorage.setItem('session_admin', 'true');
                 mostrarSistema();
             }
         }
 
         function logout() { localStorage.clear(); location.reload(); }
+        
+        function toggleTheme() {
+            const current = document.body.getAttribute('data-theme');
+            document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        }
 
         function mostrarSistema() {
             document.getElementById('vistaLogin').style.display = 'none';
@@ -181,6 +193,12 @@
                 miembros = snap.docs.map(doc => ({id: doc.id, ...doc.data()}));
                 renderizarActual();
             });
+        }
+
+        function zoomFoto(src) {
+            if(!src) return;
+            document.getElementById('zoomImg').src = src;
+            document.getElementById('zoomModal').style.display = 'flex';
         }
 
         function handleImage(input) {
@@ -196,46 +214,36 @@
             }
         }
 
-        function calcularEdad(fecha) {
-            if(!fecha) return "---";
+        function calcularEdad(f) {
+            if(!f) return "--";
             const hoy = new Date();
-            const cumple = new Date(fecha);
+            const cumple = new Date(f);
             let edad = hoy.getFullYear() - cumple.getFullYear();
             if (hoy.getMonth() < cumple.getMonth() || (hoy.getMonth() === cumple.getMonth() && hoy.getDate() < cumple.getDate())) edad--;
             return edad;
         }
 
-        function irTableros() {
-            estadoNav = { tabla: null, ciudad: null, filial: null };
-            renderizarActual();
-        }
+        function irTableros() { estadoNav = { tabla: null, ciudad: null, filial: null }; renderizarActual(); }
 
         function renderizarActual() {
             document.querySelectorAll('.vistas').forEach(v => v.style.display = 'none');
             document.getElementById('vistaNavegacion').style.display = 'block';
-            const grid = document.getElementById('gridNav');
-            grid.innerHTML = "";
+            const grid = document.getElementById('gridNav'); grid.innerHTML = "";
 
             if (!estadoNav.tabla) {
-                document.getElementById('tituloVista').innerHTML = "<h2>Tableros Principales</h2>";
+                document.getElementById('tituloVista').innerHTML = "<h2>Categorías</h2>";
                 ["Iglesias", "Guardias", "Madres"].forEach(t => {
                     grid.innerHTML += `<div class="card-nav" onclick="estadoNav.tabla='${t}'; renderizarActual()"><h3>${t}</h3></div>`;
                 });
             } else if (!estadoNav.ciudad) {
                 const ciudades = [...new Set(miembros.filter(m => m.cat === estadoNav.tabla).map(m => m.ciudad))];
-                ciudades.forEach(c => {
-                    grid.innerHTML += `<div class="card-nav" onclick="estadoNav.ciudad='${c}'; renderizarActual()"><h3>${c}</h3></div>`;
-                });
+                ciudades.forEach(c => grid.innerHTML += `<div class="card-nav" onclick="estadoNav.ciudad='${c}'; renderizarActual()"><h3>${c}</h3></div>`);
             } else if (!estadoNav.filial) {
                 const filiales = [...new Set(miembros.filter(m => m.cat === estadoNav.tabla && m.ciudad === estadoNav.ciudad).map(m => m.filial))];
-                filiales.forEach(f => {
-                    grid.innerHTML += `<div class="card-nav" onclick="estadoNav.filial='${f}'; renderizarActual()"><h3>${f}</h3></div>`;
-                });
+                filiales.forEach(f => grid.innerHTML += `<div class="card-nav" onclick="estadoNav.filial='${f}'; renderizarActual()"><h3>${f}</h3></div>`);
             } else {
-                const lista = miembros.filter(m => m.cat === estadoNav.tabla && m.ciudad === estadoNav.ciudad && m.filial === estadoNav.filial);
-                lista.forEach(m => {
-                    grid.innerHTML += `
-                    <div class="card-nav" style="display:flex; align-items:center; gap:15px; text-align:left;" onclick="verCV('${m.id}')">
+                miembros.filter(m => m.cat === estadoNav.tabla && m.ciudad === estadoNav.ciudad && m.filial === estadoNav.filial).forEach(m => {
+                    grid.innerHTML += `<div class="card-nav" style="display:flex; align-items:center; gap:15px; text-align:left;" onclick="verCV('${m.id}')">
                         <img src="${m.foto || ''}" style="width:50px; height:50px; border-radius:50%; background:#000; object-fit:cover;">
                         <div><div style="font-weight:800;">${m.nombre}</div><div style="font-size:0.8rem; color:var(--gold);">${m.rango}</div></div>
                     </div>`;
@@ -247,17 +255,14 @@
             const m = miembros.find(x => x.id === id);
             document.querySelectorAll('.vistas').forEach(v => v.style.display = 'none');
             document.getElementById('vistaCV').style.display = 'block';
-            
             document.getElementById('cvDetalle').innerHTML = `
                 <div class="cv-card">
                     <div class="cv-header">
-                        <div class="cv-photo-side">
-                            <img src="${m.foto || ''}" class="cv-photo">
-                        </div>
+                        <div class="cv-photo-side"><img src="${m.foto || ''}" class="cv-photo" onclick="zoomFoto(this.src)"></div>
                         <div class="cv-info-side">
-                            <h1 style="color:var(--gold); font-size:2rem;">${m.nombre}</h1>
-                            <p style="opacity:0.8;">C.I.: ${m.doc}</p>
-                            <button class="btn-edit" style="margin-top:15px;" onclick="abrirEditor('${m.id}')">EDITAR DATOS</button>
+                            <h1 style="color:var(--gold);">${m.nombre}</h1>
+                            <p>C.I.: ${m.doc}</p>
+                            <button class="btn-outline-gold" style="margin-top:15px;" onclick="abrirEditor('${m.id}')">EDITAR DATOS</button>
                         </div>
                     </div>
                     <div class="cv-details">
@@ -266,7 +271,6 @@
                         <div class="cv-item"><div class="cv-label">Cargo</div><div>${m.rango}</div></div>
                         <div class="cv-item"><div class="cv-label">Categoría</div><div>${m.cat}</div></div>
                         <div class="cv-item" style="grid-column: span 2;"><div class="cv-label">Ubicación</div><div>${m.ciudad} - ${m.filial}</div></div>
-                        <div class="cv-item" style="grid-column: span 2;"><div class="cv-label">Observaciones</div><div style="font-size:0.9rem;">${m.hist || 'Sin observaciones'}</div></div>
                     </div>
                 </div>`;
         }
@@ -275,7 +279,6 @@
             idEdit = id;
             document.querySelectorAll('.vistas').forEach(v => v.style.display = 'none');
             document.getElementById('vistaEditor').style.display = 'block';
-            
             if(id) {
                 const m = miembros.find(x => x.id === id);
                 document.getElementById('inNom').value = m.nombre;
