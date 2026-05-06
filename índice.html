@@ -3,30 +3,29 @@
 <head> 
     <meta charset="UTF-8">
     <meta id="viewportMeta" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GESTIÓN DE GUARDIAS</title>
+    <title>SISTEMA DE GUARDIAS</title>
     
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="apple-touch-icon" href="logo.png">
     <meta name="theme-color" content="#051F20">
 
+    <!-- Firebase SDK Compat (Necesario para la estructura del código) -->
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            /* Paleta basada en la imagen enviada */
-            --bg: #051F20;         /* Verde muy oscuro */
-            --card: #0B2B26;       /* Verde bosque */
-            --accent: #235E51;     /* Verde esmeralda medio */
-            --menta: #DAF1DE;      /* Menta claro para textos/detalles */
+            --bg: #051F20;         /* Verde Oscuro Profundo */
+            --card: #0B2B26;       /* Verde Bosque */
+            --accent: #235E51;     /* Verde Esmeralda */
+            --menta: #DAF1DE;      /* Verde Menta Claro */
             --texto: #f8fafc;
-            --texto-sec: #8EB69B;  /* Verde grisáceo para etiquetas */
+            --texto-sec: #8EB69B;  /* Verde Pálido */
             --borde: #163832;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: 0.3s; }
-
         body { background-color: var(--bg); color: var(--texto); overflow-x: hidden; }
 
         header { 
@@ -44,24 +43,20 @@
         }
         .card-folder:hover { transform: translateY(-5px); border-color: var(--menta); }
         
-        .folder-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); margin-bottom: 15px; }
-        
         .cv-container { max-width: 800px; margin: 20px auto; background: var(--card); border-radius: 24px; overflow: hidden; }
         .cv-banner { background: linear-gradient(135deg, #163832 0%, #051F20 100%); padding: 40px 20px; text-align: center; border-bottom: 2px solid var(--accent); }
         .cv-photo { width: 160px; height: 160px; border-radius: 50%; border: 4px solid var(--menta); object-fit: cover; }
 
         .info-group { margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 10px; }
-        .info-label { font-size: 0.75rem; color: var(--texto-sec); text-transform: uppercase; letter-spacing: 1px; }
+        .info-label { font-size: 0.75rem; color: var(--texto-sec); text-transform: uppercase; }
         .info-value { font-size: 1rem; font-weight: 600; color: var(--menta); }
 
         input, select, textarea { 
             background: #0B2B26; border: 1px solid var(--borde); color: white; 
             padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px;
         }
-        input:focus { border-color: var(--menta); outline: none; }
 
         .btn-primary { background: var(--accent); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%; }
-        .btn-primary:hover { background: #2d7a69; }
         .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--menta); padding: 10px 20px; border-radius: 10px; cursor: pointer; }
 
         #vistaLogin { height: 100vh; display: flex; align-items: center; justify-content: center; }
@@ -72,52 +67,47 @@
 
     <div id="vistaLogin">
         <div style="background: var(--card); padding: 40px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; border: 1px solid var(--borde);">
-            <h1 style="color: var(--menta); margin-bottom: 20px;">GUARDIAS</h1>
-            <input type="email" id="loginEmail" placeholder="Email Administrativo">
+            <h1 style="color: var(--menta); margin-bottom: 20px;">SISTEMA GUARDIAS</h1>
+            <input type="email" id="loginEmail" placeholder="Usuario">
             <input type="password" id="loginPass" placeholder="Contraseña">
-            <button class="btn-primary" onclick="login()">ACCEDER AL PANEL</button>
+            <button class="btn-primary" onclick="login()">INGRESAR</button>
         </div>
     </div>
 
     <header id="mainHeader">
-        <div onclick="location.reload()" style="cursor:pointer; font-weight:800; color: var(--menta);">REGISTRO DE GUARDIAS</div>
-        <button onclick="logout()" style="color:#ff6b6b; background:none; border:none; font-weight:bold; cursor:pointer;">CERRAR SESIÓN</button>
+        <div onclick="location.reload()" style="cursor:pointer; font-weight:800; color: var(--menta);">CONTROL DE GUARDIAS</div>
+        <button onclick="logout()" style="color:#ff6b6b; background:none; border:none; font-weight:bold; cursor:pointer;">SALIR</button>
     </header>
 
     <div id="vistaDashboard">
         <div style="padding: 20px 40px; display: flex; gap: 15px;">
-            <input type="text" id="busqueda" placeholder="Buscar guardia o congregación..." onkeyup="buscador()">
-            <button class="btn-primary" style="width:auto;" onclick="abrirEditor()">+ NUEVO REGISTRO</button>
+            <input type="text" id="busqueda" placeholder="Buscar por Nombre o Congregación..." onkeyup="buscador()">
+            <button class="btn-primary" style="width:auto;" onclick="abrirEditor()">+ NUEVO</button>
         </div>
         <div style="padding: 0 40px;">
             <button id="btnBack" class="btn-outline" onclick="volverAtras()" style="display:none; margin-bottom: 20px;">← VOLVER</button>
-            <h3 id="tituloTxt" style="color: var(--texto-sec);">Directorio de Sedes</h3>
+            <h3 id="tituloTxt" style="color: var(--texto-sec);">Ciudades</h3>
         </div>
         <div id="gridMain" class="grid-main"></div>
     </div>
 
     <div id="vistaCV">
-        <div style="padding: 20px 40px;"><button class="btn-outline" onclick="irDashboard()">← VOLVER AL LISTADO</button></div>
+        <div style="padding: 20px 40px;"><button class="btn-outline" onclick="irDashboard()">← VOLVER</button></div>
         <div id="cvContent" class="cv-container"></div>
     </div>
 
     <div id="vistaEditor">
         <div style="max-width: 600px; margin: 20px auto; background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--borde);">
-            <h2 style="color: var(--menta); margin-bottom: 20px;">Ficha de Guardia</h2>
+            <h2 style="color: var(--menta); margin-bottom: 20px;">Registro de Guardia</h2>
             <div style="display: grid; gap: 10px;">
                 <input type="text" id="inNom" placeholder="Nombre Completo">
                 <input type="date" id="inFechaNac">
                 <input type="text" id="inCong" placeholder="Congregación">
-                <select id="inCiu">
-                    <option value="">Seleccionar Ciudad</option>
-                    <option value="Asunción">Asunción</option>
-                    <option value="Caaguazú">Caaguazú</option>
-                    <option value="Ciudad del Este">Ciudad del Este</option>
-                </select>
-                <input type="text" id="inTel" placeholder="Teléfono de Contacto">
-                <input type="text" id="inDoc" placeholder="N° de Cédula / Documento">
+                <input type="text" id="inCiu" placeholder="Ciudad">
+                <input type="text" id="inTel" placeholder="WhatsApp">
+                <input type="text" id="inDoc" placeholder="Documento">
                 
-                <label style="color: var(--texto-sec); font-size: 0.8rem;">RANGO DE GUARDIA:</label>
+                <label style="color: var(--texto-sec); font-size: 0.8rem;">RANGO:</label>
                 <select id="inRango">
                     <option value="Guardia 1ro">Guardia 1ro</option>
                     <option value="Guardia 2do">Guardia 2do</option>
@@ -125,25 +115,26 @@
                     <option value="Guardia 4to">Guardia 4to</option>
                 </select>
 
-                <textarea id="inHist" placeholder="Observaciones y antecedentes..."></textarea>
-                <input type="text" id="inFoto" placeholder="URL de la Foto (opcional)">
+                <textarea id="inHist" placeholder="Historial/Observaciones..."></textarea>
+                <input type="text" id="inFoto" placeholder="URL de la Foto">
                 
-                <button class="btn-primary" onclick="guardar()">CONFIRMAR REGISTRO</button>
-                <button class="btn-outline" onclick="irDashboard()" style="width:100%; margin-top:10px;">CANCELAR</button>
+                <button class="btn-primary" onclick="guardar()">GUARDAR</button>
+                <button class="btn-outline" onclick="irDashboard()">CANCELAR</button>
             </div>
         </div>
     </div>
 
     <script>
-        // RECUERDA: Cambiar estas credenciales por las del nuevo proyecto de Firebase
+        // CONFIGURACIÓN DE TU NUEVO PROYECTO ACTUALIZADA
         const firebaseConfig = {
-            apiKey: "TU_NUEVA_API_KEY",
-            authDomain: "TU_NUEVO_PROYECTO.firebaseapp.com",
-            projectId: "TU_NUEVO_PROYECTO",
-            storageBucket: "TU_NUEVO_PROYECTO.appspot.com",
-            messagingSenderId: "TU_NUEVA_ID",
-            appId: "TU_NUEVA_APP_ID"
+            apiKey: "AIzaSyDqRqarsT3kDLbb6id6N7p-zzC2BISWOWc",
+            authDomain: "guardias-965a2.firebaseapp.com",
+            projectId: "guardias-965a2",
+            storageBucket: "guardias-965a2.firebasestorage.app",
+            messagingSenderId: "1035525169686",
+            appId: "1:1035525169686:web:043db97fdfc15524bf4b37"
         };
+        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
@@ -160,11 +151,7 @@
             return edad + " años";
         }
 
-        function login() {
-            localStorage.setItem('session_guardias', 'active');
-            mostrarSistema();
-        }
-
+        function login() { localStorage.setItem('session_g', 'active'); mostrarSistema(); }
         function logout() { localStorage.clear(); location.reload(); }
 
         function mostrarSistema() {
@@ -181,7 +168,7 @@
         }
 
         function escuchar() {
-            db.collection("guardias").onSnapshot(snap => {
+            db.collection("personal_guardia").onSnapshot(snap => {
                 miembros = snap.docs.map(doc => ({id: doc.id, ...doc.data()}));
                 if(nivel === "ciudades") renderCiudades();
             });
@@ -223,23 +210,19 @@
             const m = miembros.find(x => x.id === id);
             document.getElementById('vistaDashboard').style.display = 'none';
             document.getElementById('vistaCV').style.display = 'block';
-            
             document.getElementById('cvContent').innerHTML = `
                 <div class="cv-banner">
                     <img src="${m.foto || 'https://via.placeholder.com/160?text=FOTO'}" class="cv-photo">
-                    <h2 style="margin-top:15px; color:white;">${m.nombre}</h2>
+                    <h2 style="margin-top:15px;">${m.nombre}</h2>
                     <p style="color:var(--menta); font-weight:bold;">${m.rango}</p>
                 </div>
-                <div style="padding:30px; display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                <div style="padding:30px;">
                     <div class="info-group"><span class="info-label">Edad</span><span class="info-value">${calcularEdad(m.fechaNac)}</span></div>
-                    <div class="info-group"><span class="info-label">Sede / Cong.</span><span class="info-value">${m.cong}</span></div>
+                    <div class="info-group"><span class="info-label">Sede</span><span class="info-value">${m.cong}</span></div>
                     <div class="info-group"><span class="info-label">WhatsApp</span><span class="info-value">${m.tel}</span></div>
                     <div class="info-group"><span class="info-label">Documento</span><span class="info-value">${m.doc}</span></div>
-                    <div style="grid-column: span 2;" class="info-group">
-                        <span class="info-label">Observaciones</span>
-                        <p style="margin-top:5px;">${m.hist || 'Sin observaciones adicionales.'}</p>
-                    </div>
-                    <button class="btn-primary" onclick="abrirEditor('${m.id}')" style="grid-column: span 2;">EDITAR DATOS</button>
+                    <div class="info-group"><span class="info-label">Observaciones</span><p>${m.hist || 'Sin datos.'}</p></div>
+                    <button class="btn-primary" onclick="abrirEditor('${m.id}')">EDITAR</button>
                 </div>`;
         }
 
@@ -274,17 +257,13 @@
                 hist: document.getElementById('inHist').value,
                 foto: document.getElementById('inFoto').value
             };
-            if(idEdit) await db.collection("guardias").doc(idEdit).update(data);
-            else await db.collection("guardias").add(data);
+            if(idEdit) await db.collection("personal_guardia").doc(idEdit).update(data);
+            else await db.collection("personal_guardia").add(data);
             irDashboard();
         }
 
-        function volverAtras() {
-            if(nivel === "miembros") verCongs(miembros[0].ciudad);
-            else renderCiudades();
-        }
-
-        window.onload = () => { if(localStorage.getItem('session_guardias')) mostrarSistema(); };
+        function volverAtras() { renderCiudades(); }
+        window.onload = () => { if(localStorage.getItem('session_g')) mostrarSistema(); };
     </script>
 </body>
 </html>
