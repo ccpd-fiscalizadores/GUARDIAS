@@ -13,13 +13,13 @@
         :root {
             --bg-deep: #020c0b;
             --bg-main: #051F20;         
-            --glass: rgba(11, 43, 38, 0.85);
+            --glass: rgba(11, 43, 38, 0.95);
             --accent: #235E51;     
             --menta: #DAF1DE;      
             --gold: #C5A059;
+            --blue-light: #3498db;
             --texto: #f8fafc;
-            --borde: rgba(197, 160, 89, 0.2);
-            --danger: #ff4b4b;
+            --danger: #e74c3c;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -29,117 +29,114 @@
         }
 
         header { 
-            background: var(--glass); backdrop-filter: blur(15px); padding: 1.2rem 2rem; 
-            display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 1000;
+            background: var(--glass); padding: 1.2rem 2rem; border-bottom: 2px solid var(--gold);
+            display: flex; justify-content: space-between; align-items: center;
         }
 
-        .container { padding: 30px; max-width: 1200px; margin: auto; }
-        .grid-nav { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .container { padding: 20px; max-width: 1100px; margin: auto; }
+        .grid-nav { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         
         .card-nav { 
-            background: var(--glass); padding: 40px 25px; border-radius: 25px; 
-            border: 1px solid var(--borde); cursor: pointer; transition: 0.4s;
-            text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px;
+            background: var(--glass); padding: 30px; border-radius: 20px; border: 1px solid rgba(197, 160, 89, 0.3);
+            cursor: pointer; text-align: center; transition: 0.3s;
         }
-        .card-nav:hover { transform: translateY(-8px); border-color: var(--gold); }
+        .card-nav:hover { transform: translateY(-5px); border-color: var(--gold); }
 
-        /* CV */
-        .cv-container { max-width: 850px; margin: 0 auto 30px; background: #0b2b26; border-radius: 40px; border: 1px solid var(--gold); overflow: hidden; }
-        .cv-hero { display: grid; grid-template-columns: 300px 1fr; background: linear-gradient(135deg, #163832 0%, #051F20 100%); border-bottom: 3px solid var(--gold); }
-        .cv-photo-box { padding: 40px; display: flex; flex-direction: column; align-items: center; }
-        .cv-photo { width: 220px; height: 220px; border-radius: 30px; object-fit: cover; border: 2px solid var(--gold); cursor: zoom-in; }
-        .cv-main-info { padding: 40px; display: flex; flex-direction: column; justify-content: center; }
-        .cv-name { font-size: 2.5rem; font-weight: 800; color: var(--menta); text-transform: uppercase; }
+        /* EDITOR ESTILO IMAGEN USUARIO */
+        .header-registro { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+        .foto-perfil-container { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .circulo-foto { 
+            width: 140px; height: 140px; border-radius: 50%; border: 2px solid var(--blue-light); 
+            object-fit: cover; background: rgba(0,0,0,0.2);
+        }
+        .btn-cambiar-foto {
+            background: transparent; border: 1px solid var(--blue-light); color: var(--blue-light);
+            padding: 8px 20px; border-radius: 10px; cursor: pointer; font-size: 0.9rem;
+        }
 
-        .cv-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 40px; }
-        .detail-item { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; border-left: 3px solid var(--gold); }
-        .detail-label { font-size: 0.65rem; color: var(--gold); letter-spacing: 1.5px; font-weight: 800; }
-        .detail-value { font-size: 1.1rem; font-weight: 600; }
-
-        /* MODAL FOTO */
-        #photoZoom { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
-        #photoZoom img { max-width: 90%; max-height: 90%; border: 2px solid var(--gold); }
+        /* FORMULARIO */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full-width { grid-column: span 2; }
+        input, select, textarea { 
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
+            color: white; padding: 12px; border-radius: 8px; width: 100%;
+        }
 
         /* BOTONES */
-        .btn-primary { background: var(--gold); color: #000; border: none; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px; border-radius: 12px; cursor: pointer; }
-        .btn-danger { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 800; }
-
-        input, select, textarea { background: rgba(0,0,0,0.3); border: 1px solid var(--borde); color: white; padding: 15px; border-radius: 12px; width: 100%; margin-bottom: 15px; }
-        
-        /* ESTILO PARA SUBIR ARCHIVO */
-        .file-upload { background: var(--accent); color: white; padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px dashed var(--gold); margin-bottom: 15px; grid-column: span 2; }
-        .file-upload input { display: none; }
+        .btn-guardar { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; margin-top: 20px; }
+        .btn-eliminar { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 10px; }
+        .btn-volver { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; border-radius: 8px; cursor: pointer; }
 
         #vistaLogin { height: 100vh; display: flex; align-items: center; justify-content: center; }
-        #mainHeader, .vistas { display: none; }
-        .breadcrumb { margin-bottom: 20px; color: var(--gold); font-weight: 600; }
+        .vistas, #mainHeader { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="photoZoom" onclick="this.style.display='none'"><img id="imgZoomed" src=""></div>
-
     <!-- LOGIN -->
     <div id="vistaLogin">
-        <div style="background: var(--glass); padding: 50px; border-radius: 35px; width: 90%; max-width: 400px; text-align: center; border: 1px solid var(--gold);">
-            <h2 style="color: var(--gold); margin-bottom: 30px;">ACCESO PRIVADO</h2>
+        <div style="background: var(--glass); padding: 40px; border-radius: 20px; border: 1px solid var(--gold); text-align: center;">
+            <h2 style="color: var(--gold); margin-bottom: 20px;">ACCESO PRIVADO</h2>
             <input type="text" id="loginEmail" placeholder="Usuario">
             <input type="password" id="loginPass" placeholder="Contraseña">
-            <button class="btn-primary" style="width:100%" onclick="login()">INGRESAR</button>
+            <button class="btn-guardar" onclick="login()">INGRESAR</button>
         </div>
     </div>
 
-    <!-- HEADER -->
     <header id="mainHeader">
-        <div onclick="irTableros()" style="cursor:pointer; font-weight:800; color: var(--gold);">PANEL INSTITUCIONAL</div>
-        <button onclick="logout()" class="btn-outline" style="border-color: var(--danger); color: var(--danger);">SALIR</button>
+        <div onclick="irTableros()" style="cursor:pointer; font-weight:800; color: var(--gold);">PANEL DE CONTROL</div>
+        <button onclick="logout()" style="color: #ff6b6b; background:none; border:none; cursor:pointer;">Cerrar Sesión</button>
     </header>
 
     <div class="container vistas" id="vistaNavegacion">
-        <div id="breadNav" class="breadcrumb"></div>
-        <div id="tituloVista" style="margin-bottom:30px;"></div>
+        <div id="tituloVista" style="margin-bottom:20px;"></div>
         <div id="gridNav" class="grid-nav"></div>
-        <button class="btn-primary" style="position:fixed; bottom:30px; right:30px;" onclick="abrirEditor()">+ REGISTRAR NUEVO</button>
-    </div>
-
-    <div class="container vistas" id="vistaCV">
-        <button class="btn-outline" onclick="volverNavegacion()" style="margin-bottom:20px;">← VOLVER</button>
-        <div id="cvContent"></div>
+        <button class="btn-guardar" style="width:auto; padding:15px 30px; position:fixed; bottom:20px; right:20px;" onclick="abrirEditor()">+ Nuevo Registro</button>
     </div>
 
     <div class="container vistas" id="vistaEditor">
-        <div style="max-width: 750px; margin: auto; background: var(--glass); padding: 40px; border-radius: 30px; border: 1px solid var(--gold);">
-            <h2 id="tituloEditor" style="color: var(--gold); margin-bottom: 30px;">REGISTRAR PERSONA</h2>
+        <div style="background: var(--glass); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1);">
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <input type="text" id="inNom" placeholder="Nombre Completo" style="grid-column: span 2;">
-                <select id="inCat">
-                    <option value="Iglesias">Iglesias</option>
-                    <option value="Guardias">Guardias</option>
-                    <option value="Madres">Madres</option>
-                </select>
-                <input type="text" id="inCiu" placeholder="Ciudad">
-                <input type="text" id="inFilial" placeholder="Filial / Barrio">
-                <input type="date" id="inFechaNac">
-                <input type="text" id="inDoc" placeholder="Cédula de Identidad">
-                <input type="text" id="inTel" placeholder="WhatsApp">
-                <input type="text" id="inRango" placeholder="Cargo o Rango">
+            <div class="header-registro">
+                <h2 id="txtTituloEditor" style="font-size: 1.8rem;">Nuevo Registro</h2>
                 
-                <!-- SUBIDA DE FOTO -->
-                <label class="file-upload">
-                    <span id="fileStatus">📷 SUBIR FOTO DE PERFIL</span>
-                    <input type="file" id="inFotoFile" accept="image/*" onchange="handleImage(this)">
-                </label>
-
-                <textarea id="inHist" placeholder="Observaciones..." style="grid-column: span 2; height: 100px;"></textarea>
+                <div class="foto-perfil-container">
+                    <img id="previsualizacion" src="" class="circulo-foto" style="display: none;">
+                    <div id="circuloVacio" class="circulo-foto" style="display: block;"></div>
+                    <button class="btn-cambiar-foto" onclick="document.getElementById('inFotoFile').click()">Cambiar Foto de Perfil</button>
+                    <input type="file" id="inFotoFile" accept="image/*" style="display: none;" onchange="handleImage(this)">
+                </div>
             </div>
 
-            <div style="display:flex; justify-content: space-between; margin-top:20px; gap: 10px;">
-                <button class="btn-primary" style="flex:1" onclick="guardar()">GUARDAR</button>
-                <button id="btnEliminar" class="btn-danger" style="display:none;" onclick="eliminarRegistro()">ELIMINAR</button>
-                <button class="btn-outline" onclick="volverNavegacion()">CANCELAR</button>
+            <div class="form-grid">
+                <div class="full-width">
+                    <label style="font-size: 0.8rem; opacity: 0.7;">Nombre Completo</label>
+                    <input type="text" id="inNom">
+                </div>
+                <div>
+                    <label style="font-size: 0.8rem; opacity: 0.7;">Categoría</label>
+                    <select id="inCat">
+                        <option value="Iglesias">Iglesias</option>
+                        <option value="Guardias">Guardias</option>
+                        <option value="Madres">Madres</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.8rem; opacity: 0.7;">Fecha de Nacimiento</label>
+                    <input type="date" id="inFechaNac">
+                </div>
+                <input type="text" id="inCiu" placeholder="Ciudad">
+                <input type="text" id="inFilial" placeholder="Filial / Barrio">
+                <input type="text" id="inDoc" placeholder="Cédula de Identidad">
+                <input type="text" id="inTel" placeholder="Teléfono">
+                <input type="text" id="inRango" placeholder="Cargo / Rango" class="full-width">
+                <textarea id="inHist" placeholder="Observaciones..." class="full-width" style="height: 80px;"></textarea>
+            </div>
+
+            <button class="btn-guardar" onclick="guardar()">GUARDAR REGISTRO</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                <button id="btnEliminar" class="btn-eliminar" style="display:none;" onclick="eliminarRegistro()">ELIMINAR PERSONA</button>
+                <button class="btn-volver" onclick="volverNavegacion()">Cancelar</button>
             </div>
         </div>
     </div>
@@ -175,23 +172,20 @@
             document.getElementById('vistaLogin').style.display = 'none';
             document.getElementById('mainHeader').style.display = 'flex';
             irTableros();
-            escucharDatos();
-        }
-
-        function escucharDatos() {
             db.collection("personal_guardia").onSnapshot(snap => {
                 miembros = snap.docs.map(doc => ({id: doc.id, ...doc.data()}));
                 renderizarActual();
             });
         }
 
-        // PROCESAR IMAGEN A BASE64
         function handleImage(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     base64Foto = e.target.result;
-                    document.getElementById('fileStatus').innerText = "✅ FOTO LISTA";
+                    document.getElementById('previsualizacion').src = base64Foto;
+                    document.getElementById('previsualizacion').style.display = 'block';
+                    document.getElementById('circuloVacio').style.display = 'none';
                 };
                 reader.readAsDataURL(input.files[0]);
             }
@@ -209,84 +203,36 @@
             grid.innerHTML = "";
 
             if (!estadoNav.tabla) {
-                document.getElementById('tituloVista').innerHTML = "<h1>TABLEROS</h1>";
+                document.getElementById('tituloVista').innerHTML = "<h2>Seleccione Categoría</h2>";
                 ["Iglesias", "Guardias", "Madres"].forEach(t => {
-                    grid.innerHTML += `<div class="card-nav" onclick="seleccionarTabla('${t}')"><h3>${t}</h3></div>`;
+                    grid.innerHTML += `<div class="card-nav" onclick="estadoNav.tabla='${t}'; renderizarActual()"><h3>${t}</h3></div>`;
                 });
-                return;
-            }
-
-            if (!estadoNav.ciudad) {
-                document.getElementById('tituloVista').innerHTML = "<h1>CIUDADES</h1>";
+            } else if (!estadoNav.ciudad) {
+                document.getElementById('tituloVista').innerHTML = `<h2>Ciudades en ${estadoNav.tabla}</h2>`;
                 const ciudades = [...new Set(miembros.filter(m => m.cat === estadoNav.tabla).map(m => m.ciudad))];
                 ciudades.forEach(c => {
-                    grid.innerHTML += `<div class="card-nav" onclick="seleccionarCiudad('${c}')"><h3>${c}</h3></div>`;
+                    grid.innerHTML += `<div class="card-nav" onclick="estadoNav.ciudad='${c}'; renderizarActual()"><h3>${c}</h3></div>`;
                 });
-                return;
-            }
-
-            if (!estadoNav.filial) {
-                document.getElementById('tituloVista').innerHTML = "<h1>FILIALES</h1>";
+            } else if (!estadoNav.filial) {
+                document.getElementById('tituloVista').innerHTML = `<h2>Filiales en ${estadoNav.ciudad}</h2>`;
                 const filiales = [...new Set(miembros.filter(m => m.cat === estadoNav.tabla && m.ciudad === estadoNav.ciudad).map(m => m.filial))];
                 filiales.forEach(f => {
-                    grid.innerHTML += `<div class="card-nav" onclick="seleccionarFilial('${f}')"><h3>${f}</h3></div>`;
+                    grid.innerHTML += `<div class="card-nav" onclick="estadoNav.filial='${f}'; renderizarActual()"><h3>${f}</h3></div>`;
                 });
-                return;
-            }
-
-            document.getElementById('tituloVista').innerHTML = "<h1>PERSONAL</h1>";
-            const lista = miembros.filter(m => m.cat === estadoNav.tabla && m.ciudad === estadoNav.ciudad && m.filial === estadoNav.filial);
-            lista.forEach(m => {
-                grid.innerHTML += `
-                <div class="card-nav" style="flex-direction:row; padding:15px;" onclick="verCV('${m.id}')">
-                    <img src="${m.foto || 'https://via.placeholder.com/80'}" style="width:60px; height:60px; border-radius:10px; object-fit:cover;">
-                    <h3 style="font-size:1.1rem; margin-left:15px;">${m.nombre}</h3>
-                </div>`;
-            });
-        }
-
-        function seleccionarTabla(t) { estadoNav.tabla = t; renderizarActual(); }
-        function seleccionarCiudad(c) { estadoNav.ciudad = c; renderizarActual(); }
-        function seleccionarFilial(f) { estadoNav.filial = f; renderizarActual(); }
-
-        function verCV(id) {
-            const m = miembros.find(x => x.id === id);
-            document.getElementById('vistaNavegacion').style.display = 'none';
-            document.getElementById('vistaCV').style.display = 'block';
-            
-            let edad = "---";
-            if(m.fechaNac) {
-                const hoy = new Date();
-                const cumple = new Date(m.fechaNac);
-                edad = hoy.getFullYear() - cumple.getFullYear();
-                if (hoy.getMonth() < cumple.getMonth() || (hoy.getMonth() === cumple.getMonth() && hoy.getDate() < cumple.getDate())) edad--;
-            }
-
-            document.getElementById('cvContent').innerHTML = `
-                <div class="cv-container">
-                    <div class="cv-hero">
-                        <div class="cv-photo-box">
-                            <img src="${m.foto || 'https://via.placeholder.com/220'}" class="cv-photo" onclick="zoomPhoto('${m.foto}')">
+            } else {
+                document.getElementById('tituloVista').innerHTML = `<h2>Personal - ${estadoNav.filial}</h2>`;
+                const lista = miembros.filter(m => m.cat === estadoNav.tabla && m.ciudad === estadoNav.ciudad && m.filial === estadoNav.filial);
+                lista.forEach(m => {
+                    grid.innerHTML += `
+                    <div class="card-nav" style="display:flex; align-items:center; gap:15px; text-align:left;" onclick="abrirEditor('${m.id}')">
+                        <img src="${m.foto || ''}" style="width:50px; height:50px; border-radius:50%; background:#000; object-fit:cover;">
+                        <div>
+                            <div style="font-weight:800;">${m.nombre}</div>
+                            <div style="font-size:0.8rem; color:var(--gold);">${m.rango}</div>
                         </div>
-                        <div class="cv-main-info">
-                            <h1 class="cv-name">${m.nombre}</h1>
-                            <p style="color:var(--gold);">DOC: ${m.doc}</p>
-                        </div>
-                    </div>
-                    <div class="cv-details-grid">
-                        <div class="detail-item"><div class="detail-label">EDAD</div><div class="detail-value">${edad} AÑOS</div></div>
-                        <div class="detail-item"><div class="detail-label">WHATSAPP</div><div class="detail-value">${m.tel}</div></div>
-                        <div class="detail-item"><div class="detail-label">CATEGORÍA</div><div class="detail-value">${m.cat}</div></div>
-                        <div class="detail-item"><div class="detail-label">RANGO</div><div class="detail-value">${m.rango}</div></div>
-                        <div class="detail-item" style="grid-column: span 2;"><div class="detail-label">FILIAL</div><div class="detail-value">${m.ciudad} / ${m.filial}</div></div>
-                        <button class="btn-primary" onclick="abrirEditor('${m.id}')" style="grid-column: span 2;">EDITAR</button>
-                    </div>
-                </div>`;
-        }
-
-        function zoomPhoto(url) {
-            document.getElementById('imgZoomed').src = url;
-            document.getElementById('photoZoom').style.display = 'flex';
+                    </div>`;
+                });
+            }
         }
 
         function abrirEditor(id = null) {
@@ -294,7 +240,6 @@
             base64Foto = "";
             document.querySelectorAll('.vistas').forEach(v => v.style.display = 'none');
             document.getElementById('vistaEditor').style.display = 'block';
-            document.getElementById('fileStatus').innerText = "📷 SUBIR FOTO DE PERFIL";
             
             if(id) {
                 const m = miembros.find(x => x.id === id);
@@ -308,19 +253,17 @@
                 document.getElementById('inRango').value = m.rango;
                 document.getElementById('inHist').value = m.hist;
                 base64Foto = m.foto || "";
+                document.getElementById('previsualizacion').src = base64Foto;
+                document.getElementById('previsualizacion').style.display = base64Foto ? 'block' : 'none';
+                document.getElementById('circuloVacio').style.display = base64Foto ? 'none' : 'block';
                 document.getElementById('btnEliminar').style.display = 'block';
-                document.getElementById('tituloEditor').innerText = "EDITAR PERSONA";
+                document.getElementById('txtTituloEditor').innerText = "Editar Registro";
             } else {
                 document.querySelectorAll('#vistaEditor input, #vistaEditor textarea').forEach(i => i.value = "");
+                document.getElementById('previsualizacion').style.display = 'none';
+                document.getElementById('circuloVacio').style.display = 'block';
                 document.getElementById('btnEliminar').style.display = 'none';
-                document.getElementById('tituloEditor').innerText = "REGISTRAR PERSONA";
-            }
-        }
-
-        async function eliminarRegistro() {
-            if(confirm("¿Estás seguro de que quieres borrar a esta persona del sistema?")) {
-                await db.collection("personal_guardia").doc(idEdit).delete();
-                volverNavegacion();
+                document.getElementById('txtTituloEditor').innerText = "Nuevo Registro";
             }
         }
 
@@ -337,11 +280,16 @@
                 hist: document.getElementById('inHist').value,
                 foto: base64Foto
             };
-            if(!data.nombre) return alert("El nombre es obligatorio");
-            
             if(idEdit) await db.collection("personal_guardia").doc(idEdit).update(data);
             else await db.collection("personal_guardia").add(data);
             volverNavegacion();
+        }
+
+        async function eliminarRegistro() {
+            if(confirm("¿Eliminar a esta persona permanentemente?")) {
+                await db.collection("personal_guardia").doc(idEdit).delete();
+                volverNavegacion();
+            }
         }
 
         function volverNavegacion() { renderizarActual(); }
