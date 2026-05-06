@@ -5,9 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SISTEMA DE GESTIÓN INSTITUCIONAL</title>
     
+    <!-- Enlaces Externos -->
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Configuración PWA -->
+    <link rel="manifest" href="manifest.json">
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then(() => console.log("PWA lista"));
+      }
+    </script>
 
     <style>
         :root {
@@ -46,6 +55,8 @@
 
         .cv-card { background: var(--bg-glass); border-radius: 30px; border: 1px solid var(--gold); overflow: hidden; max-width: 800px; margin: auto; }
         .cv-header { display: grid; grid-template-columns: 250px 1fr; background: rgba(0,0,0,0.05); border-bottom: 2px solid var(--gold); }
+        @media (max-width: 600px) { .cv-header { grid-template-columns: 1fr; } }
+        
         .cv-photo { width: 180px; height: 180px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; cursor: zoom-in; }
         .cv-details { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 30px; }
         .cv-item { background: rgba(197, 160, 89, 0.05); padding: 15px; border-radius: 15px; border-left: 3px solid var(--gold); }
@@ -57,15 +68,16 @@
         .btn-gold { background: var(--gold); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: 800; cursor: pointer; }
         .btn-back { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 700; margin-bottom: 15px; }
         
-        #zoomModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
+        #zoomModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; }
         .vistas, #mainHeader { display: none; }
     </style>
 </head>
 <body data-theme="dark">
 
-    <div id="zoomModal" onclick="this.style.display='none'"><img id="zoomImg" style="max-width: 90%; border: 2px solid var(--gold);"></div>
+    <!-- Modal de Zoom -->
+    <div id="zoomModal" onclick="this.style.display='none'"><img id="zoomImg" style="max-width: 90%; max-height: 90%; border: 2px solid var(--gold); border-radius: 10px;"></div>
 
-    <!-- LOGIN -->
+    <!-- VISTA: LOGIN -->
     <div id="vistaLogin" style="height: 100vh; display: flex; align-items: center; justify-content: center;">
         <div style="background: var(--bg-glass); padding: 40px; border-radius: 25px; border: 1px solid var(--gold); text-align: center; width: 90%; max-width: 400px;">
             <h2 style="color: var(--gold); margin-bottom: 25px;">ACCESO PRIVADO</h2>
@@ -75,35 +87,39 @@
         </div>
     </div>
 
+    <!-- HEADER GLOBAL -->
     <header id="mainHeader">
-        <div onclick="irTableros()" style="cursor:pointer; font-weight:800; color: var(--gold);">PANEL DE CONTROL</div>
+        <div onclick="irTableros()" style="cursor:pointer; font-weight:800; color: var(--gold); letter-spacing: 1px;">PANEL DE CONTROL</div>
         <div style="display: flex; gap: 15px; align-items: center;">
             <button onclick="toggleTheme()" style="background:none; border:1px solid var(--gold); color:var(--gold); border-radius:15px; padding:4px 10px; cursor:pointer;">🌓</button>
             <button onclick="logout()" style="color: #ff6b6b; background:none; border:none; cursor:pointer; font-weight:700;">Salir</button>
         </div>
     </header>
 
+    <!-- VISTA: NAVEGACIÓN (Categorías, Ciudades, Filiales) -->
     <div class="container vistas" id="vistaNavegacion">
         <button id="btnVolverNav" class="btn-back" onclick="window.history.back()">← VOLVER</button>
         <div id="tituloVista" style="margin-bottom:20px;"></div>
         <div id="gridNav" class="grid-nav"></div>
-        <button class="btn-gold" style="position:fixed; bottom:20px; right:20px; z-index:99;" onclick="abrirEditor()">+ Nuevo Registro</button>
+        <button class="btn-gold" style="position:fixed; bottom:20px; right:20px; z-index:99; box-shadow: 0 4px 20px rgba(0,0,0,0.5);" onclick="abrirEditor()">+ Nuevo Registro</button>
     </div>
 
+    <!-- VISTA: CV DETALLE -->
     <div class="container vistas" id="vistaCV">
         <button class="btn-back" onclick="window.history.back()">← VOLVER AL LISTADO</button>
         <div id="cvDetalle"></div>
     </div>
 
+    <!-- VISTA: EDITOR / REGISTRO -->
     <div class="container vistas" id="vistaEditor">
         <button class="btn-back" onclick="window.history.back()">← CANCELAR</button>
         <div style="background: var(--bg-glass); padding: 30px; border-radius: 25px; border: 1px solid var(--gold); max-width: 750px; margin: auto;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 30px; align-items: center;">
-                <h2>Registro</h2>
+                <h2 id="txtTituloEditor">Registro</h2>
                 <div style="text-align: center;">
                     <img id="previsualizacion" src="" class="circulo-foto" onclick="zoomFoto(this.src)" style="display: none;">
                     <div id="circuloVacio" class="circulo-foto" onclick="document.getElementById('inFotoFile').click()"></div>
-                    <button class="btn-gold" style="padding:5px 12px; font-size:0.7rem; margin-top:8px;" onclick="document.getElementById('inFotoFile').click()">Subir Foto</button>
+                    <button class="btn-gold" style="padding:5px 12px; font-size:0.7rem; margin-top:8px; display: block;" onclick="document.getElementById('inFotoFile').click()">Foto</button>
                     <input type="file" id="inFotoFile" accept="image/*" style="display: none;" onchange="handleImage(this)">
                 </div>
             </div>
@@ -113,12 +129,16 @@
                 <input type="date" id="inFechaNac">
                 <input type="text" id="inCiu" placeholder="Ciudad">
                 <input type="text" id="inFilial" placeholder="Filial / Barrio">
-                <input type="text" id="inDoc" placeholder="Cédula">
+                <input type="text" id="inDoc" placeholder="Cédula de Identidad">
                 <input type="text" id="inTel" placeholder="Teléfono">
-                <select id="inRango" style="grid-column: span 2;"><option value="1ro">1ro</option><option value="2do">2do</option><option value="3ro">3ro</option><option value="4to">4to</option><option value="5to">5to</option></select>
-                <textarea id="inHist" placeholder="Observaciones..." style="grid-column: span 2; height: 80px;"></textarea>
+                <select id="inRango" style="grid-column: span 2;">
+                    <option value="" disabled selected>Seleccione Cargo</option>
+                    <option value="1ro">1ro</option><option value="2do">2do</option><option value="3ro">3ro</option><option value="4to">4to</option><option value="5to">5to</option>
+                </select>
+                <textarea id="inHist" placeholder="Observaciones o historial..." style="grid-column: span 2; height: 80px;"></textarea>
             </div>
             <button class="btn-gold" style="width: 100%; margin-top: 25px; padding: 18px;" onclick="guardar()">GUARDAR REGISTRO</button>
+            <button id="btnEliminar" style="width:100%; background:none; border:none; color:#ff6b6b; margin-top:15px; cursor:pointer; font-weight:700;" onclick="eliminarRegistro()">Eliminar Permanente</button>
         </div>
     </div>
 
@@ -136,23 +156,22 @@
 
         let miembros = [], estadoNav = { tabla: null, ciudad: null, filial: null }, idEdit = null, base64Foto = "";
 
-        // MANEJO DE BOTÓN ATRÁS DEL CELULAR
+        // MANEJO DE HISTORIAL (Para que el botón de atrás del celular funcione)
         window.onpopstate = function() {
             if (idEdit) { idEdit = null; renderizarActual(); }
             else if (estadoNav.filial) { estadoNav.filial = null; renderizarActual(); }
             else if (estadoNav.ciudad) { estadoNav.ciudad = null; renderizarActual(); }
             else if (estadoNav.tabla) { estadoNav.tabla = null; renderizarActual(); }
         };
-
         function pushState() { history.pushState({nav: true}, ""); }
 
+        // FUNCIONES DE ACCESO
         function login() {
             if (document.getElementById('loginEmail').value === "Guardias@admi" && document.getElementById('loginPass').value === "2398") {
                 localStorage.setItem('session_admin', 'true');
                 mostrarSistema();
             }
         }
-
         function logout() { localStorage.clear(); location.reload(); }
         function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
 
@@ -176,51 +195,60 @@
             const grid = document.getElementById('gridNav'); grid.innerHTML = "";
 
             if (!estadoNav.tabla) {
-                document.getElementById('tituloVista').innerHTML = "<h2>Categorías</h2>";
+                document.getElementById('tituloVista').innerHTML = "<h2>Categorías Principales</h2>";
                 ["Iglesias", "Guardias", "Madres"].forEach(t => {
                     grid.innerHTML += `<div class="card-nav" onclick="estadoNav.tabla='${t}'; pushState(); renderizarActual()"><h3>${t}</h3></div>`;
                 });
             } else if (!estadoNav.ciudad) {
-                document.getElementById('tituloVista').innerHTML = `<h2>Ciudades</h2>`;
+                document.getElementById('tituloVista').innerHTML = `<h2>Ciudades (${estadoNav.tabla})</h2>`;
                 const ciudades = [...new Set(miembros.filter(m => m.cat === estadoNav.tabla).map(m => m.ciudad))];
                 ciudades.forEach(c => grid.innerHTML += `<div class="card-nav" onclick="estadoNav.ciudad='${c}'; pushState(); renderizarActual()"><h3>${c}</h3></div>`);
             } else if (!estadoNav.filial) {
-                document.getElementById('tituloVista').innerHTML = `<h2>Filiales</h2>`;
+                document.getElementById('tituloVista').innerHTML = `<h2>Filiales en ${estadoNav.ciudad}</h2>`;
                 const filiales = [...new Set(miembros.filter(m => m.cat === estadoNav.tabla && m.ciudad === estadoNav.ciudad).map(m => m.filial))];
                 filiales.forEach(f => grid.innerHTML += `<div class="card-nav" onclick="estadoNav.filial='${f}'; pushState(); renderizarActual()"><h3>${f}</h3></div>`);
             } else {
-                document.getElementById('tituloVista').innerHTML = `<h2>${estadoNav.filial}</h2>`;
+                document.getElementById('tituloVista').innerHTML = `<h2>Miembros: ${estadoNav.filial}</h2>`;
                 miembros.filter(m => m.cat === estadoNav.tabla && m.ciudad === estadoNav.ciudad && m.filial === estadoNav.filial).forEach(m => {
                     grid.innerHTML += `<div class="card-nav" style="display:flex; align-items:center; gap:15px; text-align:left;" onclick="verCV('${m.id}')">
-                        <img src="${m.foto || ''}" style="width:50px; height:50px; border-radius:50%; background:#000; object-fit:cover;">
-                        <div><b>${m.nombre}</b><br><small>${m.rango}</small></div>
+                        <img src="${m.foto || ''}" style="width:55px; height:55px; border-radius:50%; background:#000; object-fit:cover; border: 1px solid var(--gold);">
+                        <div><div style="font-weight:800;">${m.nombre}</div><div style="font-size:0.8rem; color:var(--gold); font-weight:600;">Cargo: ${m.rango}</div></div>
                     </div>`;
                 });
             }
         }
 
+        // VISTA CV
         function verCV(id) {
             const m = miembros.find(x => x.id === id);
             pushState();
             document.querySelectorAll('.vistas').forEach(v => v.style.display = 'none');
             document.getElementById('vistaCV').style.display = 'block';
+            
+            const edad = m.fechaNac ? (new Date().getFullYear() - new Date(m.fechaNac).getFullYear()) : "--";
+
             document.getElementById('cvDetalle').innerHTML = `
                 <div class="cv-card">
                     <div class="cv-header">
-                        <div style="padding:20px; text-align:center;"><img src="${m.foto || ''}" class="cv-photo" onclick="zoomFoto(this.src)"></div>
-                        <div style="padding:20px;">
-                            <h1 style="color:var(--gold);">${m.nombre}</h1>
-                            <button class="btn-gold" style="padding:5px 15px; margin-top:10px;" onclick="abrirEditor('${m.id}')">Editar</button>
+                        <div style="padding:30px; text-align:center;"><img src="${m.foto || ''}" class="cv-photo" onclick="zoomFoto(this.src)"></div>
+                        <div style="padding:30px; display:flex; flex-direction:column; justify-content:center;">
+                            <h1 style="color:var(--gold); font-size:1.8rem; margin-bottom:5px;">${m.nombre}</h1>
+                            <p style="opacity:0.7; font-weight:600;">C.I.: ${m.doc}</p>
+                            <button class="btn-gold" style="padding:8px 20px; margin-top:20px; font-size:0.8rem;" onclick="abrirEditor('${m.id}')">EDITAR DATOS</button>
                         </div>
                     </div>
                     <div class="cv-details">
+                        <div class="cv-item"><div class="cv-label">Edad</div><div style="font-size:1.2rem; font-weight:800;">${edad} Años</div></div>
+                        <div class="cv-item"><div class="cv-label">Cargo</div><div style="font-weight:600;">${m.rango}</div></div>
                         <div class="cv-item"><div class="cv-label">Teléfono</div><div>${m.tel}</div></div>
-                        <div class="cv-item"><div class="cv-label">Cargo</div><div>${m.rango}</div></div>
+                        <div class="cv-item"><div class="cv-label">Categoría</div><div>${m.cat}</div></div>
                         <div class="cv-item" style="grid-column: span 2;"><div class="cv-label">Ubicación</div><div>${m.ciudad} - ${m.filial}</div></div>
+                        <div class="cv-item" style="grid-column: span 2;"><div class="cv-label">Observaciones</div><div style="font-size:0.9rem; opacity:0.8;">${m.hist || 'Sin notas.'}</div></div>
                     </div>
                 </div>`;
         }
 
+        // EDITOR
         function abrirEditor(id = null) {
             idEdit = id; pushState();
             document.querySelectorAll('.vistas').forEach(v => v.style.display = 'none');
@@ -240,10 +268,12 @@
                 document.getElementById('previsualizacion').src = base64Foto;
                 document.getElementById('previsualizacion').style.display = base64Foto ? 'block' : 'none';
                 document.getElementById('circuloVacio').style.display = base64Foto ? 'none' : 'block';
+                document.getElementById('btnEliminar').style.display = 'block';
             } else {
-                document.querySelectorAll('#vistaEditor input, #vistaEditor textarea').forEach(i => i.value = "");
+                document.querySelectorAll('#vistaEditor input, #vistaEditor textarea, #vistaEditor select').forEach(i => i.value = "");
                 document.getElementById('previsualizacion').style.display = 'none';
                 document.getElementById('circuloVacio').style.display = 'block';
+                document.getElementById('btnEliminar').style.display = 'none';
                 base64Foto = "";
             }
         }
@@ -264,6 +294,13 @@
             if(idEdit) await db.collection("personal_guardia").doc(idEdit).update(data);
             else await db.collection("personal_guardia").add(data);
             window.history.back();
+        }
+
+        async function eliminarRegistro() {
+            if(confirm("¿Estás seguro de eliminar este registro?")) {
+                await db.collection("personal_guardia").doc(idEdit).delete();
+                window.history.back();
+            }
         }
 
         function handleImage(input) {
