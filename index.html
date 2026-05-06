@@ -14,7 +14,6 @@
             --bg-deep: #020c0b;
             --bg-glass: rgba(11, 43, 38, 0.95);
             --gold: #C5A059;
-            --gold-light: #E0C08D;
             --texto: #f8fafc;
             --input-bg: rgba(0,0,0,0.3);
             --card-border: rgba(197, 160, 89, 0.3);
@@ -24,7 +23,6 @@
             --bg-deep: #f1f5f9;
             --bg-glass: rgba(255, 255, 255, 0.95);
             --gold: #A67C00;
-            --gold-light: #C5A059;
             --texto: #0f172a;
             --input-bg: #ffffff;
             --card-border: rgba(166, 124, 0, 0.2);
@@ -32,10 +30,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: background 0.3s, color 0.3s; }
         
-        body { 
-            background: var(--bg-deep);
-            color: var(--texto); min-height: 100vh;
-        }
+        body { background: var(--bg-deep); color: var(--texto); min-height: 100vh; }
 
         header { 
             background: var(--bg-glass); padding: 1.2rem 2rem; border-bottom: 2px solid var(--gold);
@@ -49,31 +44,27 @@
             background: var(--bg-glass); padding: 30px; border-radius: 20px; border: 1px solid var(--card-border);
             cursor: pointer; text-align: center;
         }
-        .card-nav:hover { transform: translateY(-5px); border-color: var(--gold); }
 
-        /* CV Y FOTO */
+        /* CV ESTILO */
         .cv-card { background: var(--bg-glass); border-radius: 30px; border: 1px solid var(--gold); overflow: hidden; max-width: 800px; margin: auto; }
-        .cv-header { display: grid; grid-template-columns: 250px 1fr; background: rgba(0,0,0,0.1); border-bottom: 2px solid var(--gold); }
-        .cv-photo-side { padding: 30px; display: flex; flex-direction: column; align-items: center; }
+        .cv-header { display: grid; grid-template-columns: 250px 1fr; background: rgba(0,0,0,0.05); border-bottom: 2px solid var(--gold); }
+        .cv-photo-side { padding: 30px; text-align: center; }
         .cv-photo { width: 180px; height: 180px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; cursor: zoom-in; }
         .cv-details { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 30px; }
         .cv-item { background: rgba(197, 160, 89, 0.05); padding: 15px; border-radius: 15px; border-left: 3px solid var(--gold); }
         .cv-label { font-size: 0.7rem; color: var(--gold); font-weight: 800; text-transform: uppercase; }
 
-        /* EDITOR */
+        /* FORMULARIOS */
         .circulo-foto { width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; background: rgba(0,0,0,0.1); cursor: zoom-in; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .full-width { grid-column: span 2; }
         input, select, textarea { background: var(--input-bg); border: 1px solid var(--card-border); color: var(--texto); padding: 12px; border-radius: 8px; width: 100%; }
 
         /* BOTONES */
         .btn-gold { background: var(--gold); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: 800; cursor: pointer; }
-        .btn-outline-gold { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .btn-theme { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 10px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; }
-
-        /* ZOOM MODAL */
+        .btn-back { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 700; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 8px; }
+        
+        /* MODAL ZOOM */
         #zoomModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
-        #zoomImg { max-width: 90%; max-height: 90%; border: 3px solid var(--gold); border-radius: 10px; }
+        #zoomImg { max-width: 90%; max-height: 90%; border: 2px solid var(--gold); }
 
         .vistas, #mainHeader { display: none; }
     </style>
@@ -84,50 +75,52 @@
 
     <!-- LOGIN -->
     <div id="vistaLogin" style="height: 100vh; display: flex; align-items: center; justify-content: center;">
-        <div style="background: var(--bg-glass); padding: 40px; border-radius: 20px; border: 1px solid var(--gold); text-align: center;">
-            <h2 style="color: var(--gold); margin-bottom: 20px;">ACCESO PRIVADO</h2>
+        <div style="background: var(--bg-glass); padding: 40px; border-radius: 25px; border: 1px solid var(--gold); text-align: center; width: 90%; max-width: 400px;">
+            <h2 style="color: var(--gold); margin-bottom: 25px; letter-spacing: 2px;">ACCESO PRIVADO</h2>
             <input type="text" id="loginEmail" placeholder="Usuario">
-            <input type="password" id="loginPass" placeholder="Contraseña" style="margin-top:10px;">
-            <button class="btn-gold" style="width:100%; margin-top:20px;" onclick="login()">INGRESAR</button>
+            <input type="password" id="loginPass" placeholder="Contraseña" style="margin-top:15px;">
+            <button class="btn-gold" style="width:100%; margin-top:25px;" onclick="login()">INGRESAR AL PANEL</button>
         </div>
     </div>
 
     <header id="mainHeader">
         <div onclick="irTableros()" style="cursor:pointer; font-weight:800; color: var(--gold);">PANEL DE CONTROL</div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <button class="btn-theme" onclick="toggleTheme()">🌓 Modo</button>
-            <button onclick="logout()" style="color: #ff6b6b; background:none; border:none; cursor:pointer; font-size: 0.8rem;">Salir</button>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <button onclick="toggleTheme()" style="background:none; border:1px solid var(--gold); color:var(--gold); border-radius:15px; padding:4px 10px; cursor:pointer;">🌓</button>
+            <button onclick="logout()" style="color: #ff6b6b; background:none; border:none; cursor:pointer; font-weight:700;">Salir</button>
         </div>
     </header>
 
     <!-- NAVEGACIÓN -->
     <div class="container vistas" id="vistaNavegacion">
+        <button id="btnVolverNav" class="btn-back" onclick="navegarAtras()">← VOLVER</button>
         <div id="tituloVista" style="margin-bottom:20px;"></div>
         <div id="gridNav" class="grid-nav"></div>
-        <button class="btn-gold" style="position:fixed; bottom:20px; right:20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" onclick="abrirEditor()">+ Nuevo Registro</button>
+        <button class="btn-gold" style="position:fixed; bottom:20px; right:20px; box-shadow: 0 8px 20px rgba(0,0,0,0.4);" onclick="abrirEditor()">+ Nuevo Registro</button>
     </div>
 
     <!-- CV -->
     <div class="container vistas" id="vistaCV">
-        <button onclick="volverNavegacion()" class="btn-outline-gold" style="margin-bottom:20px;">← VOLVER</button>
+        <button class="btn-back" onclick="volverNavegacion()">← VOLVER AL LISTADO</button>
         <div id="cvDetalle"></div>
     </div>
 
     <!-- EDITOR -->
     <div class="container vistas" id="vistaEditor">
-        <div style="background: var(--bg-glass); padding: 30px; border-radius: 25px; border: 1px solid var(--gold); max-width: 700px; margin: auto;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+        <button class="btn-back" onclick="volverNavegacion()">← CANCELAR / VOLVER</button>
+        <div style="background: var(--bg-glass); padding: 30px; border-radius: 25px; border: 1px solid var(--gold); max-width: 750px; margin: auto;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 30px; align-items: center;">
                 <h2 id="txtTituloEditor">Registro</h2>
                 <div style="text-align: center;">
                     <img id="previsualizacion" src="" class="circulo-foto" onclick="zoomFoto(this.src)" style="display: none;">
                     <div id="circuloVacio" class="circulo-foto" onclick="document.getElementById('inFotoFile').click()"></div>
-                    <button class="btn-outline-gold" style="font-size: 0.7rem; margin-top: 5px; display: block;" onclick="document.getElementById('inFotoFile').click()">Cambiar Foto</button>
+                    <button class="btn-gold" style="padding:5px 12px; font-size:0.7rem; margin-top:8px;" onclick="document.getElementById('inFotoFile').click()">Subir Foto</button>
                     <input type="file" id="inFotoFile" accept="image/*" style="display: none;" onchange="handleImage(this)">
                 </div>
             </div>
 
-            <div class="form-grid">
-                <input type="text" id="inNom" placeholder="Nombre Completo" class="full-width">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <input type="text" id="inNom" placeholder="Nombre Completo" style="grid-column: span 2;">
                 <select id="inCat">
                     <option value="Iglesias">Iglesias</option>
                     <option value="Guardias">Guardias</option>
@@ -138,7 +131,7 @@
                 <input type="text" id="inFilial" placeholder="Filial / Barrio">
                 <input type="text" id="inDoc" placeholder="Cédula de Identidad">
                 <input type="text" id="inTel" placeholder="Teléfono">
-                <select id="inRango" class="full-width">
+                <select id="inRango" style="grid-column: span 2;">
                     <option value="" disabled selected>Seleccione Cargo</option>
                     <option value="1ro">1ro</option>
                     <option value="2do">2do</option>
@@ -146,14 +139,11 @@
                     <option value="4to">4to</option>
                     <option value="5to">5to</option>
                 </select>
-                <textarea id="inHist" placeholder="Observaciones..." class="full-width" style="height: 60px;"></textarea>
+                <textarea id="inHist" placeholder="Observaciones..." style="grid-column: span 2; height: 80px;"></textarea>
             </div>
 
-            <button class="btn-gold" style="width: 100%; margin-top: 20px;" onclick="guardar()">GUARDAR CAMBIOS</button>
-            <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                <button id="btnEliminar" style="color:#ff6b6b; background:none; border:none; cursor:pointer;" onclick="eliminarRegistro()">Eliminar Persona</button>
-                <button onclick="volverNavegacion()" style="background:none; border:none; color:var(--texto); cursor:pointer;">Cancelar</button>
-            </div>
+            <button class="btn-gold" style="width: 100%; margin-top: 25px; padding: 18px;" onclick="guardar()">GUARDAR REGISTRO</button>
+            <button id="btnEliminar" style="width:100%; background:none; border:none; color:#ff6b6b; margin-top:15px; cursor:pointer; font-weight:700;" onclick="eliminarRegistro()">Eliminar Permanentemente</button>
         </div>
     </div>
 
@@ -179,10 +169,9 @@
         }
 
         function logout() { localStorage.clear(); location.reload(); }
-        
         function toggleTheme() {
-            const current = document.body.getAttribute('data-theme');
-            document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+            const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', t);
         }
 
         function mostrarSistema() {
@@ -195,11 +184,14 @@
             });
         }
 
-        function zoomFoto(src) {
-            if(!src) return;
-            document.getElementById('zoomImg').src = src;
-            document.getElementById('zoomModal').style.display = 'flex';
+        function navegarAtras() {
+            if (estadoNav.filial) estadoNav.filial = null;
+            else if (estadoNav.ciudad) estadoNav.ciudad = null;
+            else if (estadoNav.tabla) estadoNav.tabla = null;
+            renderizarActual();
         }
+
+        function zoomFoto(src) { if(src) { document.getElementById('zoomImg').src = src; document.getElementById('zoomModal').style.display = 'flex'; } }
 
         function handleImage(input) {
             if (input.files && input.files[0]) {
@@ -216,11 +208,10 @@
 
         function calcularEdad(f) {
             if(!f) return "--";
-            const hoy = new Date();
-            const cumple = new Date(f);
-            let edad = hoy.getFullYear() - cumple.getFullYear();
-            if (hoy.getMonth() < cumple.getMonth() || (hoy.getMonth() === cumple.getMonth() && hoy.getDate() < cumple.getDate())) edad--;
-            return edad;
+            const hoy = new Date(); const cumple = new Date(f);
+            let e = hoy.getFullYear() - cumple.getFullYear();
+            if (hoy.getMonth() < cumple.getMonth() || (hoy.getMonth() === cumple.getMonth() && hoy.getDate() < cumple.getDate())) e--;
+            return e;
         }
 
         function irTableros() { estadoNav = { tabla: null, ciudad: null, filial: null }; renderizarActual(); }
@@ -228,20 +219,25 @@
         function renderizarActual() {
             document.querySelectorAll('.vistas').forEach(v => v.style.display = 'none');
             document.getElementById('vistaNavegacion').style.display = 'block';
+            document.getElementById('btnVolverNav').style.visibility = estadoNav.tabla ? 'visible' : 'hidden';
+            
             const grid = document.getElementById('gridNav'); grid.innerHTML = "";
 
             if (!estadoNav.tabla) {
-                document.getElementById('tituloVista').innerHTML = "<h2>Categorías</h2>";
+                document.getElementById('tituloVista').innerHTML = "<h2>Categorías Principales</h2>";
                 ["Iglesias", "Guardias", "Madres"].forEach(t => {
                     grid.innerHTML += `<div class="card-nav" onclick="estadoNav.tabla='${t}'; renderizarActual()"><h3>${t}</h3></div>`;
                 });
             } else if (!estadoNav.ciudad) {
+                document.getElementById('tituloVista').innerHTML = `<h2>Ciudades (${estadoNav.tabla})</h2>`;
                 const ciudades = [...new Set(miembros.filter(m => m.cat === estadoNav.tabla).map(m => m.ciudad))];
                 ciudades.forEach(c => grid.innerHTML += `<div class="card-nav" onclick="estadoNav.ciudad='${c}'; renderizarActual()"><h3>${c}</h3></div>`);
             } else if (!estadoNav.filial) {
+                document.getElementById('tituloVista').innerHTML = `<h2>Filiales en ${estadoNav.ciudad}</h2>`;
                 const filiales = [...new Set(miembros.filter(m => m.cat === estadoNav.tabla && m.ciudad === estadoNav.ciudad).map(m => m.filial))];
                 filiales.forEach(f => grid.innerHTML += `<div class="card-nav" onclick="estadoNav.filial='${f}'; renderizarActual()"><h3>${f}</h3></div>`);
             } else {
+                document.getElementById('tituloVista').innerHTML = `<h2>${estadoNav.filial}</h2>`;
                 miembros.filter(m => m.cat === estadoNav.tabla && m.ciudad === estadoNav.ciudad && m.filial === estadoNav.filial).forEach(m => {
                     grid.innerHTML += `<div class="card-nav" style="display:flex; align-items:center; gap:15px; text-align:left;" onclick="verCV('${m.id}')">
                         <img src="${m.foto || ''}" style="width:50px; height:50px; border-radius:50%; background:#000; object-fit:cover;">
@@ -259,18 +255,19 @@
                 <div class="cv-card">
                     <div class="cv-header">
                         <div class="cv-photo-side"><img src="${m.foto || ''}" class="cv-photo" onclick="zoomFoto(this.src)"></div>
-                        <div class="cv-info-side">
+                        <div class="cv-info-side" style="padding:30px;">
                             <h1 style="color:var(--gold);">${m.nombre}</h1>
-                            <p>C.I.: ${m.doc}</p>
-                            <button class="btn-outline-gold" style="margin-top:15px;" onclick="abrirEditor('${m.id}')">EDITAR DATOS</button>
+                            <p style="opacity:0.7; margin-bottom:15px;">Documento: ${m.doc}</p>
+                            <button class="btn-gold" style="padding:8px 20px;" onclick="abrirEditor('${m.id}')">EDITAR PERFIL</button>
                         </div>
                     </div>
                     <div class="cv-details">
-                        <div class="cv-item"><div class="cv-label">Edad</div><div style="font-size:1.2rem;">${calcularEdad(m.fechaNac)} Años</div></div>
-                        <div class="cv-item"><div class="cv-label">Teléfono</div><div>${m.tel}</div></div>
-                        <div class="cv-item"><div class="cv-label">Cargo</div><div>${m.rango}</div></div>
+                        <div class="cv-item"><div class="cv-label">Edad Calculada</div><div style="font-size:1.2rem; font-weight:800;">${calcularEdad(m.fechaNac)} Años</div></div>
+                        <div class="cv-item"><div class="cv-label">Contacto</div><div>${m.tel}</div></div>
+                        <div class="cv-item"><div class="cv-label">Cargo Asignado</div><div>${m.rango || 'Sin asignar'}</div></div>
                         <div class="cv-item"><div class="cv-label">Categoría</div><div>${m.cat}</div></div>
                         <div class="cv-item" style="grid-column: span 2;"><div class="cv-label">Ubicación</div><div>${m.ciudad} - ${m.filial}</div></div>
+                        <div class="cv-item" style="grid-column: span 2;"><div class="cv-label">Historial / Notas</div><div style="font-size:0.9rem;">${m.hist || 'No hay notas registradas.'}</div></div>
                     </div>
                 </div>`;
         }
@@ -323,7 +320,7 @@
         }
 
         async function eliminarRegistro() {
-            if(confirm("¿Eliminar permanentemente?")) {
+            if(confirm("¿Confirmas la eliminación total de este registro?")) {
                 await db.collection("personal_guardia").doc(idEdit).delete();
                 volverNavegacion();
             }
