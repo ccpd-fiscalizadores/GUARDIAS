@@ -1,0 +1,16 @@
+{
+  "name": "Sistema de Gestión",
+  "short_name": "Gestión",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#020c0b",
+  "theme_color": "#C5A059",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1443/1443000.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
