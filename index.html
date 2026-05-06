@@ -16,7 +16,7 @@
 
     <style>
         :root {
-            /* Paleta de verdes solicitada */
+            /* Paleta de colores: Verde Esmeralda y Menta */
             --bg: #051F20;         
             --card: #0B2B26;       
             --accent: #235E51;     
@@ -66,12 +66,14 @@
 </head>
 <body>
 
+    <!-- Pantalla de Inicio de Sesión -->
     <div id="vistaLogin">
         <div style="background: var(--card); padding: 40px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; border: 1px solid var(--borde);">
             <h1 style="color: var(--menta); margin-bottom: 20px;">SISTEMA GUARDIAS</h1>
-            <input type="email" id="loginEmail" placeholder="Usuario">
+            <input type="text" id="loginEmail" placeholder="Usuario">
             <input type="password" id="loginPass" placeholder="Contraseña">
             <button class="btn-primary" onclick="login()">INGRESAR</button>
+            <p id="errorMsg" style="color: #ff6b6b; margin-top: 10px; display: none; font-size: 0.8rem;">Credenciales incorrectas</p>
         </div>
     </div>
 
@@ -80,9 +82,10 @@
         <button onclick="logout()" style="color:#ff6b6b; background:none; border:none; font-weight:bold; cursor:pointer;">SALIR</button>
     </header>
 
+    <!-- Panel Principal -->
     <div id="vistaDashboard">
         <div style="padding: 20px 40px; display: flex; gap: 15px;">
-            <input type="text" id="busqueda" placeholder="Buscar por Nombre o Congregación..." onkeyup="buscador()">
+            <input type="text" id="busqueda" placeholder="Buscar guardia..." onkeyup="buscador()">
             <button class="btn-primary" style="width:auto;" onclick="abrirEditor()">+ NUEVO</button>
         </div>
         <div style="padding: 0 40px;">
@@ -92,11 +95,13 @@
         <div id="gridMain" class="grid-main"></div>
     </div>
 
+    <!-- Vista de Perfil Detallado -->
     <div id="vistaCV">
         <div style="padding: 20px 40px;"><button class="btn-outline" onclick="irDashboard()">← VOLVER</button></div>
         <div id="cvContent" class="cv-container"></div>
     </div>
 
+    <!-- Formulario de Registro/Edición -->
     <div id="vistaEditor">
         <div style="max-width: 600px; margin: 20px auto; background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--borde);">
             <h2 style="color: var(--menta); margin-bottom: 20px;">Registro de Guardia</h2>
@@ -105,10 +110,10 @@
                 <input type="date" id="inFechaNac">
                 <input type="text" id="inCong" placeholder="Congregación">
                 <input type="text" id="inCiu" placeholder="Ciudad">
-                <input type="text" id="inTel" placeholder="WhatsApp">
-                <input type="text" id="inDoc" placeholder="Documento">
+                <input type="text" id="inTel" placeholder="WhatsApp (Ej: +595...)">
+                <input type="text" id="inDoc" placeholder="Nro de Documento">
                 
-                <label style="color: var(--texto-sec); font-size: 0.8rem;">RANGO:</label>
+                <label style="color: var(--texto-sec); font-size: 0.8rem;">RANGO ASIGNADO:</label>
                 <select id="inRango">
                     <option value="Guardia 1ro">Guardia 1ro</option>
                     <option value="Guardia 2do">Guardia 2do</option>
@@ -116,16 +121,17 @@
                     <option value="Guardia 4to">Guardia 4to</option>
                 </select>
 
-                <textarea id="inHist" placeholder="Historial/Observaciones..."></textarea>
-                <input type="text" id="inFoto" placeholder="URL de la Foto">
+                <textarea id="inHist" placeholder="Notas adicionales o historial..."></textarea>
+                <input type="text" id="inFoto" placeholder="Link de la foto (URL)">
                 
-                <button class="btn-primary" onclick="guardar()">GUARDAR</button>
+                <button class="btn-primary" onclick="guardar()">GUARDAR REGISTRO</button>
                 <button class="btn-outline" onclick="irDashboard()">CANCELAR</button>
             </div>
         </div>
     </div>
 
     <script>
+        // Configuración de Firebase - Proyecto: guardias-965a2
         const firebaseConfig = {
             apiKey: "AIzaSyDqRqarsT3kDLbb6id6N7p-zzC2BISWOWc",
             authDomain: "guardias-965a2.firebaseapp.com",
@@ -142,17 +148,24 @@
         let idEdit = null;
         let nivel = "ciudades";
 
-        function calcularEdad(fecha) {
-            if(!fecha) return '---';
-            const cumple = new Date(fecha);
-            const hoy = new Date();
-            let edad = hoy.getFullYear() - cumple.getFullYear();
-            if (hoy.getMonth() < cumple.getMonth() || (hoy.getMonth() === cumple.getMonth() && hoy.getDate() < cumple.getDate())) edad--;
-            return edad + " años";
+        // Función de Acceso solicitada
+        function login() {
+            const user = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+
+            if (user === "Guardias@admi" && pass === "2398") {
+                localStorage.setItem('session_guardia_v1', 'active');
+                document.getElementById('errorMsg').style.display = 'none';
+                mostrarSistema();
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
         }
 
-        function login() { localStorage.setItem('session_g', 'active'); mostrarSistema(); }
-        function logout() { localStorage.clear(); location.reload(); }
+        function logout() {
+            localStorage.removeItem('session_guardia_v1');
+            location.reload();
+        }
 
         function mostrarSistema() {
             document.getElementById('vistaLogin').style.display = 'none';
@@ -164,10 +177,10 @@
             document.getElementById('vistaDashboard').style.display = 'block';
             document.getElementById('vistaCV').style.display = 'none';
             document.getElementById('vistaEditor').style.display = 'none';
-            escuchar();
+            escucharBaseDeDatos();
         }
 
-        function escuchar() {
+        function escucharBaseDeDatos() {
             db.collection("personal_guardia").onSnapshot(snap => {
                 miembros = snap.docs.map(doc => ({id: doc.id, ...doc.data()}));
                 if(nivel === "ciudades") renderCiudades();
@@ -177,17 +190,21 @@
         function renderCiudades() {
             nivel = "ciudades";
             document.getElementById('btnBack').style.display = 'none';
-            const grid = document.getElementById('gridMain'); grid.innerHTML = "";
+            document.getElementById('tituloTxt').innerText = "Ciudades";
+            const grid = document.getElementById('gridMain'); 
+            grid.innerHTML = "";
             const cius = [...new Set(miembros.map(m => m.ciudad))];
             cius.forEach(c => {
-                grid.innerHTML += `<div class="card-folder" onclick="verCongs('${c}')"><h3>📍 ${c}</h3></div>`;
+                grid.innerHTML += `<div class="card-folder" onclick="verCongregaciones('${c}')"><h3>📍 ${c}</h3></div>`;
             });
         }
 
-        function verCongs(c) {
+        function verCongregaciones(c) {
             nivel = "congs";
             document.getElementById('btnBack').style.display = 'inline-block';
-            const grid = document.getElementById('gridMain'); grid.innerHTML = "";
+            document.getElementById('tituloTxt').innerText = `Sedes en ${c}`;
+            const grid = document.getElementById('gridMain'); 
+            grid.innerHTML = "";
             const congs = [...new Set(miembros.filter(m => m.ciudad === c).map(m => m.cong))];
             congs.forEach(co => {
                 grid.innerHTML += `<div class="card-folder" onclick="verMiembros('${co}')"><h3>⛪ ${co}</h3></div>`;
@@ -196,9 +213,12 @@
 
         function verMiembros(co) {
             nivel = "miembros";
-            const grid = document.getElementById('gridMain'); grid.innerHTML = "";
+            document.getElementById('tituloTxt').innerText = `Personal de ${co}`;
+            const grid = document.getElementById('gridMain'); 
+            grid.innerHTML = "";
             miembros.filter(m => m.cong === co).forEach(m => {
-                grid.innerHTML += `<div class="card-folder" onclick="verCV('${m.id}')">
+                grid.innerHTML += `
+                <div class="card-folder" onclick="verCV('${m.id}')">
                     <img src="${m.foto || 'https://via.placeholder.com/80?text=👤'}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid var(--menta);">
                     <h3 style="margin-top:10px;">${m.nombre}</h3>
                     <p style="color:var(--menta); font-size:0.8rem;">${m.rango}</p>
@@ -210,6 +230,9 @@
             const m = miembros.find(x => x.id === id);
             document.getElementById('vistaDashboard').style.display = 'none';
             document.getElementById('vistaCV').style.display = 'block';
+            
+            const edad = m.fechaNac ? (new Date().getFullYear() - new Date(m.fechaNac).getFullYear()) + " años" : "No registrada";
+
             document.getElementById('cvContent').innerHTML = `
                 <div class="cv-banner">
                     <img src="${m.foto || 'https://via.placeholder.com/160?text=FOTO'}" class="cv-photo">
@@ -217,12 +240,12 @@
                     <p style="color:var(--menta); font-weight:bold;">${m.rango}</p>
                 </div>
                 <div style="padding:30px;">
-                    <div class="info-group"><span class="info-label">Edad</span><span class="info-value">${calcularEdad(m.fechaNac)}</span></div>
+                    <div class="info-group"><span class="info-label">Edad</span><span class="info-value">${edad}</span></div>
                     <div class="info-group"><span class="info-label">Sede</span><span class="info-value">${m.cong}</span></div>
                     <div class="info-group"><span class="info-label">WhatsApp</span><span class="info-value">${m.tel}</span></div>
                     <div class="info-group"><span class="info-label">Documento</span><span class="info-value">${m.doc}</span></div>
-                    <div class="info-group"><span class="info-label">Observaciones</span><p>${m.hist || 'Sin datos.'}</p></div>
-                    <button class="btn-primary" onclick="abrirEditor('${m.id}')">EDITAR</button>
+                    <div class="info-group"><span class="info-label">Historial</span><p style="color:white; margin-top:5px;">${m.hist || 'Sin observaciones.'}</p></div>
+                    <button class="btn-primary" onclick="abrirEditor('${m.id}')" style="margin-top:10px;">EDITAR DATOS</button>
                 </div>`;
         }
 
@@ -231,6 +254,7 @@
             document.getElementById('vistaDashboard').style.display = 'none';
             document.getElementById('vistaCV').style.display = 'none';
             document.getElementById('vistaEditor').style.display = 'block';
+            
             if(id) {
                 const m = miembros.find(x => x.id === id);
                 document.getElementById('inNom').value = m.nombre;
@@ -242,6 +266,8 @@
                 document.getElementById('inRango').value = m.rango;
                 document.getElementById('inHist').value = m.hist;
                 document.getElementById('inFoto').value = m.foto || "";
+            } else {
+                document.querySelectorAll('#vistaEditor input, #vistaEditor textarea').forEach(i => i.value = "");
             }
         }
 
@@ -257,13 +283,40 @@
                 hist: document.getElementById('inHist').value,
                 foto: document.getElementById('inFoto').value
             };
+            
+            if(!data.nombre || !data.ciudad || !data.cong) {
+                alert("Por favor completa Nombre, Ciudad y Sede.");
+                return;
+            }
+
             if(idEdit) await db.collection("personal_guardia").doc(idEdit).update(data);
             else await db.collection("personal_guardia").add(data);
+            
             irDashboard();
         }
 
         function volverAtras() { renderCiudades(); }
-        window.onload = () => { if(localStorage.getItem('session_g')) mostrarSistema(); };
+
+        function buscador() {
+            const term = document.getElementById('busqueda').value.toLowerCase();
+            const grid = document.getElementById('gridMain');
+            grid.innerHTML = "";
+            nivel = "busqueda";
+            document.getElementById('btnBack').style.display = 'inline-block';
+
+            miembros.filter(m => m.nombre.toLowerCase().includes(term) || m.cong.toLowerCase().includes(term)).forEach(m => {
+                grid.innerHTML += `
+                <div class="card-folder" onclick="verCV('${m.id}')">
+                    <img src="${m.foto || 'https://via.placeholder.com/80?text=👤'}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid var(--menta);">
+                    <h3 style="margin-top:10px;">${m.nombre}</h3>
+                    <p style="color:var(--menta); font-size:0.8rem;">${m.cong}</p>
+                </div>`;
+            });
+        }
+
+        window.onload = () => { 
+            if(localStorage.getItem('session_guardia_v1')) mostrarSistema(); 
+        };
     </script>
 </body>
 </html>
