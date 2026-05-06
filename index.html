@@ -3,7 +3,7 @@
 <head> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SISTEMA - GUARDIAS</title>
+    <title>SISTEMA DE GESTIÓN - GUARDIAS</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
@@ -27,14 +27,12 @@
             color: var(--texto); min-height: 100vh;
         }
 
-        /* HEADER PROFESIONAL */
         header { 
             background: var(--glass); backdrop-filter: blur(15px); padding: 1.2rem 2rem; 
             display: flex; justify-content: space-between; align-items: center; 
             border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 1000;
         }
 
-        /* DASHBOARD CARDS */
         .grid-main { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 30px; }
         .card-folder { 
             background: var(--glass); padding: 25px; border-radius: 20px; 
@@ -42,7 +40,7 @@
         }
         .card-folder:hover { transform: translateY(-8px); border-color: var(--gold); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
         
-        /* CV REDISEÑADO - IMPACTO VISUAL */
+        /* CV PROFESIONAL SIN ELITE */
         .cv-container { max-width: 850px; margin: 30px auto; background: #0b2b26; border-radius: 40px; border: 1px solid var(--gold); overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.7); }
         
         .cv-hero { 
@@ -50,7 +48,8 @@
             border-bottom: 3px solid var(--gold);
         }
         .cv-photo-box { padding: 40px; display: flex; flex-direction: column; align-items: center; background: rgba(0,0,0,0.2); }
-        .cv-photo { width: 220px; height: 220px; border-radius: 30px; object-fit: cover; border: 2px solid var(--gold); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .cv-photo { width: 220px; height: 220px; border-radius: 30px; object-fit: cover; border: 2px solid var(--gold); cursor: zoom-in; transition: 0.3s; }
+        .cv-photo:hover { transform: scale(1.03); }
         
         .cv-main-info { padding: 40px; display: flex; flex-direction: column; justify-content: center; }
         .cv-name { font-size: 2.5rem; font-weight: 800; color: var(--menta); line-height: 1.1; margin-bottom: 10px; text-transform: uppercase; }
@@ -61,11 +60,14 @@
         .detail-label { font-size: 0.65rem; color: var(--gold); letter-spacing: 1.5px; font-weight: 800; margin-bottom: 5px; }
         .detail-value { font-size: 1.1rem; font-weight: 600; color: var(--texto); }
 
-        .cv-history { grid-column: span 2; background: rgba(0,0,0,0.3); padding: 30px; border-radius: 25px; margin-top: 10px; }
+        /* MODAL DE ZOOM PARA LA FOTO */
+        #photoZoom {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center;
+        }
+        #photoZoom img { max-width: 90%; max-height: 90%; border-radius: 15px; border: 2px solid var(--gold); box-shadow: 0 0 30px var(--gold); }
 
-        /* BOTONES Y FORMULARIOS */
         .btn-primary { background: var(--gold); color: #000; border: none; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; width: 100%; transition: 0.3s; }
-        .btn-primary:hover { background: var(--menta); transform: scale(1.02); }
         .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px; border-radius: 12px; cursor: pointer; }
 
         input, select, textarea { background: rgba(0,0,0,0.3); border: 1px solid var(--borde); color: white; padding: 15px; border-radius: 12px; width: 100%; margin-bottom: 15px; }
@@ -76,10 +78,15 @@
 </head>
 <body>
 
+    <!-- ZOOM MODAL -->
+    <div id="photoZoom" onclick="this.style.display='none'">
+        <img id="imgZoomed" src="">
+    </div>
+
     <!-- LOGIN -->
     <div id="vistaLogin">
         <div style="background: var(--glass); backdrop-filter: blur(20px); padding: 50px; border-radius: 35px; width: 90%; max-width: 420px; text-align: center; border: 1px solid var(--gold);">
-            <h1 style="color: var(--gold); font-weight: 800; letter-spacing: 3px; margin-bottom: 30px;">SYSTEM</h1>
+            <h1 style="color: var(--gold); font-weight: 800; letter-spacing: 3px; margin-bottom: 30px;">ACCESO INSTITUCIONAL</h1>
             <input type="text" id="loginEmail" placeholder="ID de Usuario">
             <input type="password" id="loginPass" placeholder="Contraseña">
             <button class="btn-primary" onclick="login()">AUTENTICAR</button>
@@ -89,8 +96,8 @@
 
     <!-- HEADER -->
     <header id="mainHeader">
-        <div onclick="location.reload()" style="cursor:pointer; font-weight:800; color: var(--gold); letter-spacing: 2px;">ELITE <span style="color:var(--menta)">GUARDIAS</span></div>
-        <button onclick="logout()" class="btn-outline" style="border-color: #ff6b6b; color: #ff6b6b;">SALIR</button>
+        <div onclick="location.reload()" style="cursor:pointer; font-weight:800; color: var(--gold); letter-spacing: 2px;">GESTIÓN <span style="color:var(--menta)">GUARDIAS</span></div>
+        <button onclick="logout()" class="btn-outline" style="border-color: #ff6b6b; color: #ff6b6b;">CERRAR SESIÓN</button>
     </header>
 
     <!-- DASHBOARD -->
@@ -102,7 +109,7 @@
         <div id="gridMain" class="grid-main"></div>
     </div>
 
-    <!-- CV DE ALTO NIVEL -->
+    <!-- CV ACTUALIZADO -->
     <div id="vistaCV">
         <div style="padding: 20px 40px;"><button class="btn-outline" onclick="irDashboard()">← VOLVER AL PANEL</button></div>
         <div id="cvContent" class="cv-container"></div>
@@ -151,12 +158,12 @@
             const user = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPass').value;
             if (user === "Guardias@admi" && pass === "2398") {
-                localStorage.setItem('session_elite_v2', 'active');
+                localStorage.setItem('session_institucional_v1', 'active');
                 mostrarSistema();
             } else { document.getElementById('errorMsg').style.display = 'block'; }
         }
 
-        function logout() { localStorage.removeItem('session_elite_v2'); location.reload(); }
+        function logout() { localStorage.removeItem('session_institucional_v1'); location.reload(); }
         
         function mostrarSistema() { 
             document.getElementById('vistaLogin').style.display = 'none';
@@ -195,32 +202,48 @@
             });
         }
 
+        function zoomPhoto(url) {
+            document.getElementById('imgZoomed').src = url;
+            document.getElementById('photoZoom').style.display = 'flex';
+        }
+
         function verCV(id) {
             const m = miembros.find(x => x.id === id);
             document.getElementById('vistaDashboard').style.display = 'none';
             document.getElementById('vistaCV').style.display = 'block';
             
+            // Cálculo de edad preciso
+            let edadStr = "---";
+            if(m.fechaNac) {
+                const hoy = new Date();
+                const cumple = new Date(m.fechaNac);
+                let edad = hoy.getFullYear() - cumple.getFullYear();
+                if (hoy.getMonth() < cumple.getMonth() || (hoy.getMonth() === cumple.getMonth() && hoy.getDate() < cumple.getDate())) edad--;
+                edadStr = edad + " AÑOS";
+            }
+
             document.getElementById('cvContent').innerHTML = `
                 <div class="cv-hero">
                     <div class="cv-photo-box">
-                        <img src="${m.foto || 'https://via.placeholder.com/220'}" class="cv-photo">
+                        <img src="${m.foto || 'https://via.placeholder.com/220'}" class="cv-photo" onclick="zoomPhoto('${m.foto || 'https://via.placeholder.com/220'}')">
+                        <p style="font-size: 0.6rem; color: var(--gold); margin-top: 10px; cursor: pointer;" onclick="zoomPhoto('${m.foto || 'https://via.placeholder.com/220'}')">HACER ZOOM [ICON]</p>
                     </div>
                     <div class="cv-main-info">
                         <div class="cv-badge">${m.rango.toUpperCase()}</div>
                         <h1 class="cv-name">${m.nombre}</h1>
-                        <p style="color: var(--gold); letter-spacing: 2px; font-weight: 200;">CÓDIGO DE AGENTE: ${m.doc.slice(-4) || 'XXXX'}</p>
+                        <p style="color: var(--gold); letter-spacing: 2px; font-weight: 200;">IDENTIFICACIÓN: ${m.doc || 'NO REGISTRADO'}</p>
                     </div>
                 </div>
                 <div class="cv-details-grid">
-                    <div class="detail-item"><div class="detail-label">IDENTIFICACIÓN</div><div class="detail-value">${m.doc}</div></div>
+                    <div class="detail-item"><div class="detail-label">EDAD ACTUAL</div><div class="detail-value">${edadStr}</div></div>
                     <div class="detail-item"><div class="detail-label">SEDE ASIGNADA</div><div class="detail-value">${m.cong}</div></div>
                     <div class="detail-item"><div class="detail-label">CIUDAD</div><div class="detail-value">${m.ciudad}</div></div>
-                    <div class="detail-item"><div class="detail-label">CONTACTO DIRECTO</div><div class="detail-value">${m.tel}</div></div>
+                    <div class="detail-item"><div class="detail-label">WHATSAPP</div><div class="detail-value">${m.tel}</div></div>
                     <div class="cv-history">
-                        <div class="detail-label">NOTAS Y ANTECEDENTES</div>
-                        <p style="line-height:1.6; opacity:0.9; margin-top:10px;">${m.hist || 'Sin observaciones adicionales registradas.'}</p>
+                        <div class="detail-label">HISTORIAL Y OBSERVACIONES</div>
+                        <p style="line-height:1.6; opacity:0.9; margin-top:10px;">${m.hist || 'Sin observaciones registradas.'}</p>
                     </div>
-                    <button class="btn-primary" onclick="abrirEditor('${m.id}')" style="grid-column: span 2; margin-top:20px;">EDITAR EXPEDIENTE</button>
+                    <button class="btn-primary" onclick="abrirEditor('${m.id}')" style="grid-column: span 2; margin-top:20px;">EDITAR REGISTRO</button>
                 </div>`;
         }
 
@@ -280,7 +303,7 @@
             });
         }
 
-        window.onload = () => { if(localStorage.getItem('session_elite_v2')) mostrarSistema(); };
+        window.onload = () => { if(localStorage.getItem('session_institucional_v1')) mostrarSistema(); };
     </script>
 </body>
 </html>
