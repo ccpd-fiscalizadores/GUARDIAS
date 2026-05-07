@@ -136,7 +136,7 @@
     </div>
 
     <header id="mainHeader">
-        <div class="logo-container" onclick="irInicio()">
+        <div class="logo-container" onclick="irTableros()">
             <img src="logo.png" alt="Logo" class="app-logo">
             <span class="logo-text">FISCALIZADORES<span style="color:var(--accent)">.</span></span>
         </div>
@@ -192,7 +192,7 @@
                     <select id="inCiu"><option value="" disabled selected>Primero elija país</option></select>
                 </div>
                 <div><label class="info-label">WhatsApp</label><input type="text" id="inTel"></div>
-                <div><label class="info-label">Documento / C.I.</label><input type="text" id="inDoc"></div>
+                <div><label class="info-label">Documento</label><input type="text" id="inDoc"></div>
                 <div><label class="info-label">Estado Civil</label><input type="text" id="inEstCiv"></div>
                 <div><label class="info-label">Congregación</label><input type="text" id="inCong"></div>
                 <div><label class="info-label">Ocupación Espiritual</label><input type="text" id="inOcuEsp"></div>
@@ -253,15 +253,21 @@
         let nivel = "ciudades"; let ciuSel = ""; let nacSel = "";
         let congSelGlobal = ""; let congParaEditar = ""; let categoriaUsuario = "";
 
-        // --- SISTEMA DE NAVEGACIÓN ---
+        // --- SISTEMA DE NAVEGACIÓN TIPO APP ---
         window.onpopstate = function() {
             if (idEdit) { idEdit = null; irDashboard(); }
-            else if (nivel === "miembros") { verCongs(ciuSel, nacSel, true); }
+            else if (nivel === "miembros") { verCongs(ciuSel, nacSel); }
             else if (nivel === "congs") { renderCiudades(); }
-            else { irDashboard(); }
+            else if (document.getElementById('vistaCV').style.display === 'block') { irDashboard(); }
         };
+
         function pushState() { history.pushState({nav: true}, ""); }
-        function irInicio() { nivel = "ciudades"; renderCiudades(); }
+
+        function irTableros() {
+            nivel = "ciudades"; ciuSel = ""; nacSel = ""; congSelGlobal = "";
+            renderCiudades();
+        }
+        // -------------------------------------
 
         function login() {
             const email = document.getElementById('loginEmail').value.toLowerCase().trim();
@@ -308,9 +314,6 @@
             document.getElementById('vistaCV').style.display = 'block';
             const edadCalculada = calcularEdad(m.fechaNac);
 
-            // LOGICA DE ETIQUETA DINAMICA: Si tiene Ocupación Espiritual (Ej: Guardia), se usa como título del Documento.
-            const etiquetaRango = m.ocuEsp ? m.ocuEsp.toUpperCase() : "DOCUMENTO / C.I.";
-
             document.getElementById('cvContent').innerHTML = `
                 <div class="cv-banner">
                     <img src="${m.foto || 'https://via.placeholder.com/160'}" class="cv-photo" onclick="abrirZoomFoto(this.src)">
@@ -321,10 +324,7 @@
                     <div class="cv-left">
                         <span class="section-label">Contacto y Datos</span>
                         <div class="info-group"><span class="info-label">📱 Teléfono</span><span class="info-value">${m.tel || '---'}</span></div>
-                        <div class="info-group">
-                            <span class="info-label">🆔 ${etiquetaRango}</span>
-                            <span class="info-value">${m.doc || '---'}</span>
-                        </div>
+                        <div class="info-group"><span class="info-label">🆔 Documento</span><span class="info-value">${m.doc || '---'}</span></div>
                         <div class="info-group"><span class="info-label">📅 Edad</span><span class="info-value">${edadCalculada}</span></div>
                         <div class="info-group"><span class="info-label">💠 Estado Civil</span><span class="info-value">${m.estCiv || '---'}</span></div>
                     </div>
@@ -360,6 +360,8 @@
             db.collection("curriculums").onSnapshot(snap => {
                 let todos = []; snap.forEach(doc => todos.push({ id: doc.id, ...doc.data() }));
                 miembros = (categoriaUsuario === "ADMIN") ? todos : todos.filter(m => m.fisc === categoriaUsuario);
+                
+                // Actualizar la vista actual sin cambiar de nivel
                 if(nivel === "ciudades") renderCiudades();
                 else if(nivel === "congs") verCongs(ciuSel, nacSel, true);
                 else if(nivel === "miembros") verMiembros(ciuSel, nacSel, congSelGlobal, true);
